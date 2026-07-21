@@ -405,11 +405,9 @@ function enviarReserva(){
     motivo: motivo
   };
 
-  fetch(APPS_SCRIPT_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)})
-    .then(function(r){ return r.json(); })
-    .then(function(resp){
-      var okGuardado = resp && resp.ok;
-      mostrarExitoReserva(fechaFmt, desde, hasta, usuario, motivo, okGuardado, resp && resp.error);
+  fetch(APPS_SCRIPT_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)})
+    .then(function(){
+      mostrarExitoReserva(fechaFmt, desde, hasta, usuario, motivo, true, null);
     })
     .catch(function(err){
       mostrarExitoReserva(fechaFmt, desde, hasta, usuario, motivo, false, err.message);
@@ -418,8 +416,8 @@ function enviarReserva(){
 
 function mostrarExitoReserva(fechaFmt, desde, hasta, usuario, motivo, okGuardado, errorMsg){
   var aviso = okGuardado
-    ? '<div style="background:#eafaf0;border:1.5px solid var(--gn);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--gn);margin-bottom:12px">✅ Guardado en la planilla correctamente.</div>'
-    : '<div style="background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#c62828;margin-bottom:12px">⚠️ NO se pudo guardar en la planilla. Error: '+(errorMsg||'desconocido')+'</div>';
+    ? '<div style="background:#eafaf0;border:1.5px solid var(--gn);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--gn);margin-bottom:12px">✅ Enviado a la planilla.</div>'
+    : '<div style="background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#c62828;margin-bottom:12px">⚠️ NO se pudo enviar (sin conexión). Error: '+(errorMsg||'desconocido')+'</div>';
   document.getElementById('rSuccMsg').textContent = 'Turno del '+fechaFmt+' de '+desde+' a '+hasta+'.';
   document.getElementById('rSuccDet').innerHTML = aviso+
     '<strong>👤 '+usuario+'</strong>'+
@@ -485,11 +483,9 @@ function enviarCierre(){
     fotoBase64: fotoDataUrl
   };
 
-  fetch(APPS_SCRIPT_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)})
-    .then(function(r){ return r.json(); })
-    .then(function(resp){
-      var okGuardado = resp && resp.ok;
-      mostrarExitoCierre(fechaFmt, hora, obs, okGuardado, resp && resp.error);
+  fetch(APPS_SCRIPT_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)})
+    .then(function(){
+      mostrarExitoCierre(fechaFmt, hora, obs, true, null);
     })
     .catch(function(err){
       mostrarExitoCierre(fechaFmt, hora, obs, false, err.message);
@@ -498,8 +494,8 @@ function enviarCierre(){
 
 function mostrarExitoCierre(fechaFmt, hora, obs, okGuardado, errorMsg){
   var aviso = okGuardado
-    ? '<div style="background:#eafaf0;border:1.5px solid var(--gn);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--gn);margin-bottom:12px">✅ Guardado en la planilla (con la foto) correctamente.</div>'
-    : '<div style="background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#c62828;margin-bottom:12px">⚠️ NO se pudo guardar en la planilla. Error: '+(errorMsg||'desconocido')+'</div>';
+    ? '<div style="background:#eafaf0;border:1.5px solid var(--gn);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--gn);margin-bottom:12px">✅ Enviado a la planilla (con la foto).</div>'
+    : '<div style="background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#c62828;margin-bottom:12px">⚠️ NO se pudo enviar (sin conexión). Error: '+(errorMsg||'desconocido')+'</div>';
   document.getElementById('cSuccDet').innerHTML = aviso+
     '<strong>👤 '+selPersonaC.ap+', '+selPersonaC.nom+'</strong>'+
     '<div style="font-size:12px;color:var(--mu);margin-top:4px">📅 '+fechaFmt+' · 🕐 '+hora+'</div>'+
