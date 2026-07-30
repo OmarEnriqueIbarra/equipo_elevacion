@@ -2,557 +2,558 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Control de Equipos — Akapol</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Equipo de Elevación — Akapol</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
-:root{
-  --bg:#f0ede8;--card:#fff;--tx:#1c1a17;--mu:#7a7570;--br:#dedad4;
-  --ac:#c45c1a;--ac2:#e8956d;--head:#1c1a17;--gn:#2e7d32;--gn2:#d4edda;
-  --yl:#f59e0b;--yl2:#fef3c7;--rd:#c0392b;--rd2:#fdecea;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#f2f2f2;--card:#fff;--br:#ddd;--tx:#1a1a1a;--mu:#777;--ac:#d85a30;--gn:#2e9e50;--s1:#fafafa;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:14px;padding-bottom:40px;}
+body{background:var(--bg);color:var(--tx);font-family:'Inter',sans-serif;font-size:15px;min-height:100vh;}
+.hdr{background:var(--ac);color:#fff;padding:16px 20px 14px;text-align:center;}
+.hdr .ey{font-size:10px;letter-spacing:.15em;text-transform:uppercase;opacity:.75;margin-bottom:4px;}
+.hdr h1{font-size:20px;font-weight:800;}
+.hdr p{font-size:12px;opacity:.7;margin-top:2px;}
 
-.hdr{background:var(--head);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
-.hdr-left .ey{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac2);font-family:'Space Mono',monospace;margin-bottom:3px;}
-.hdr-left h1{font-size:19px;font-weight:800;}
+.modo-bar{display:flex;gap:6px;padding:12px 16px;background:var(--card);border-bottom:1px solid var(--br);}
+.modo-btn{flex:1;padding:11px 8px;border:1.5px solid var(--br);border-radius:10px;background:var(--s1);font-size:13px;font-weight:700;cursor:pointer;color:var(--mu);font-family:'Inter',sans-serif;}
+.modo-btn.on{border-color:var(--ac);color:#fff;background:var(--ac);}
 
-.wrap{max-width:1400px;margin:0 auto;padding:16px 16px 0;}
-.status-line{padding:6px 4px;font-size:11px;color:var(--mu);}
+.step{display:none;padding:18px 16px;padding-bottom:100px;}
+.step.on{display:block;}
+.slbl{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:18px;}
+.slbl:first-child{margin-top:0;}
+.sel-field{width:100%;padding:13px 14px;border:1.5px solid var(--br);border-radius:10px;font-size:15px;font-family:'Inter',sans-serif;background:var(--card);color:var(--tx);appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+.sel-field:focus{outline:none;border-color:var(--ac);}
+.date-field{width:100%;padding:13px 14px;border:1.5px solid var(--br);border-radius:10px;font-size:15px;font-family:'Inter',sans-serif;background:var(--card);color:var(--tx);color-scheme:light;}
+.date-field:focus{outline:none;border-color:var(--ac);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.obs-inp{width:100%;background:var(--s1);border:1.5px solid var(--br);border-radius:10px;padding:12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--tx);resize:none;}
+.obs-inp:focus{outline:none;border-color:var(--ac);}
 
-.resumen{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
-@media(max-width:600px){.resumen{grid-template-columns:repeat(2,1fr);}}
-.resumen-box{background:var(--card);border:1px solid var(--br);border-radius:10px;padding:10px;text-align:center;}
-.resumen-box .num{font-size:22px;font-weight:800;}
-.resumen-box .lbl{font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.03em;margin-top:2px;}
-.resumen-box.ok .num{color:var(--gn);}
-.resumen-box.por .num{color:var(--yl);}
-.resumen-box.venc .num{color:var(--rd);}
+.check-row{display:flex;align-items:center;gap:10px;margin-top:14px;cursor:pointer;}
+.check-box{width:22px;height:22px;border-radius:6px;border:2px solid var(--br);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;}
+.check-box.on{background:var(--ac);border-color:var(--ac);color:#fff;}
+.check-lbl{font-size:13px;font-weight:600;}
 
-.categoria{margin-bottom:22px;}
-.cat-titulo{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#fff;background:var(--ac);padding:9px 14px;border-radius:8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-.cat-titulo .cant{background:rgba(255,255,255,.25);border-radius:20px;padding:1px 9px;font-size:11px;}
+#fichaResult{display:none;margin-top:10px;background:#fff;border:1.5px solid var(--br);border-radius:10px;padding:14px 16px;}
+#fichaResult .lbl{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+#fichaResult .nom{font-size:17px;font-weight:800;color:var(--tx);}
+#fichaResult .sec{font-size:13px;color:var(--mu);margin-top:3px;}
+#fichaError{display:none;margin-top:10px;background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:12px 16px;font-size:13px;color:#c62828;}
+#fichaSugg{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--ac);border-top:none;border-radius:0 0 10px 10px;z-index:50;max-height:220px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.sugg-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid #f0f0f0;font-size:13px;line-height:1.4;}
 
-.eq-card{background:var(--card);border:1.5px solid var(--br);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
-.eq-card.st-ok{border-left:5px solid var(--gn);}
-.eq-card.st-por{border-left:5px solid var(--yl);}
-.eq-card.st-venc{border-left:5px solid var(--rd);}
-.eq-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
-.eq-jj{font-family:'Space Mono',monospace;font-weight:800;color:var(--ac);font-size:14px;}
-.eq-desc{font-size:12px;color:var(--mu);margin-top:2px;}
-.chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap;}
-.chip-ok{background:var(--gn2);color:var(--gn);}
-.chip-por{background:var(--yl2);color:#8a6100;}
-.chip-venc{background:var(--rd2);color:var(--rd);}
+#fichaResultC{display:none;margin-top:10px;background:#fff;border:1.5px solid var(--br);border-radius:10px;padding:14px 16px;}
+#fichaResultC .lbl{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+#fichaResultC .nom{font-size:17px;font-weight:800;color:var(--tx);}
+#fichaErrorC{display:none;margin-top:10px;background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:12px 16px;font-size:13px;color:#c62828;}
+#fichaSuggC{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--ac);border-top:none;border-radius:0 0 10px 10px;z-index:50;max-height:220px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12);}
 
-.eq-info{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--mu);}
-.eq-info b{color:var(--tx);}
+.estado-btns{display:flex;gap:8px;margin-top:8px;}
+.estado-btn{flex:1;padding:12px 8px;border:1.5px solid var(--br);border-radius:10px;background:var(--card);font-size:13px;font-weight:700;cursor:pointer;color:var(--mu);text-align:center;}
+.estado-btn.on-ok{border-color:var(--gn);color:var(--gn);background:#eafaf0;}
+.estado-btn.on-nov{border-color:#e05050;color:#c62828;background:#fff5f5;}
 
-.eq-acciones{display:flex;gap:8px;margin-top:12px;}
-.btn{padding:8px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;}
-.btn-ac{background:var(--ac);color:#fff;}
-.btn-gh{background:#fff;border:1px solid var(--br);color:var(--tx);}
+.foto-box{border:2px dashed #cfcac2;border-radius:12px;background:var(--s1);text-align:center;padding:16px;margin-top:8px;}
+.foto-preview{width:100%;min-height:160px;border-radius:8px;background:#eee;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px;}
+.foto-preview img{width:100%;height:100%;object-fit:cover;display:block;}
+.foto-preview .ph{color:#bbb;font-size:12px;}
+.btn-foto{display:inline-block;background:#fff;border:1px solid var(--br);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;color:var(--tx);}
+.btn-foto input{display:none;}
+.aviso-foto{background:#fff8e1;border:1.5px solid #f0c14b;border-radius:10px;padding:12px 14px;font-size:12.5px;color:#8a6100;margin-top:10px;line-height:1.5;}
+.dispo-item{display:flex;justify-content:space-between;background:var(--s1);border:1px solid var(--br);border-radius:8px;padding:8px 12px;margin-top:6px;font-size:12.5px;}
+.dispo-libre{color:var(--gn);font-weight:700;}
+.dispo-ok{background:#eafaf0;border-color:var(--gn);color:var(--gn);border-radius:10px;padding:10px 14px;font-size:12.5px;font-weight:600;margin-top:6px;}
 
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;}
-.modal-bg.show{display:flex;}
-.modal{background:#fff;border-radius:14px;max-width:480px;width:100%;max-height:85vh;overflow:auto;padding:22px;}
-.modal h3{font-size:16px;margin-bottom:14px;}
-.modal-cerrar{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:var(--mu);}
-.f label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--mu);margin:10px 0 5px;}
-.f input,.f textarea{width:100%;padding:9px 10px;border:1px solid #e9d98a;background:#fffde7;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;color:var(--tx);}
-.f textarea{resize:vertical;min-height:60px;}
-.f-estado{display:flex;gap:6px;}
-.btn-estado{flex:1;padding:9px 4px;border-radius:8px;border:1.5px solid var(--br);background:#fff;font-size:11px;font-weight:700;cursor:pointer;color:var(--mu);font-family:'Inter',sans-serif;}
-.btn-estado.on-arevisar{background:var(--yl2);border-color:var(--yl);color:#8a6100;}
-.btn-estado.on-revisado{background:var(--gn2);border-color:var(--gn);color:var(--gn);}
-.btn-estado.on-pasado{background:var(--rd2);border-color:var(--rd);color:var(--rd);}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--br);padding:12px 16px;}
+.btn{width:100%;background:var(--ac);color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.btn:disabled{opacity:.35;}
+.btn:active:not(:disabled){opacity:.85;}
 
-.hist-item{border-bottom:1px solid var(--br);padding:10px 0;font-size:12.5px;}
-.hist-item:last-child{border-bottom:none;}
-.hist-fecha{font-family:'Space Mono',monospace;font-weight:700;color:var(--ac);}
-.hist-acciones{margin-top:4px;}
-.link-mini{color:var(--ac);font-size:11px;font-weight:600;cursor:pointer;text-decoration:underline;background:none;border:none;margin-right:10px;}
-
-.tabs{display:flex;background:#fff;border-bottom:2px solid var(--br);padding:0 16px;}
-.tab-btn{padding:11px 16px;font-size:13px;font-weight:700;cursor:pointer;border:none;background:none;color:var(--mu);border-bottom:3px solid transparent;margin-bottom:-2px;font-family:'Inter',sans-serif;}
-.tab-btn.active{color:var(--ac);border-bottom-color:var(--ac);}
-
-.cron-nav{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
-.cron-mes-label{font-size:15px;font-weight:800;min-width:140px;text-align:center;}
-
-.print-only{display:none;}
-@media print{
-  body *{visibility:hidden;}
-  #printARevisar, #printARevisar *{visibility:visible;}
-  #printARevisar{display:block;position:absolute;top:0;left:0;width:100%;padding:20px;}
-  .print-only h2{font-size:16px;margin-bottom:4px;}
-  .print-only .print-sub{font-size:11px;color:var(--mu);margin-bottom:14px;}
-  table.print-tabla{width:100%;border-collapse:collapse;font-size:12px;}
-  table.print-tabla th, table.print-tabla td{border:1px solid #999;padding:6px 8px;text-align:left;}
-  table.print-tabla th{background:#eee;}
-}
-.cron-scroll{overflow-x:auto;background:#fff;border:1px solid var(--br);border-radius:10px;}
-table.cron-tabla{border-collapse:collapse;font-size:10.5px;white-space:nowrap;width:100%;}
-table.cron-tabla th, table.cron-tabla td{border:1px solid var(--br);padding:4px 5px;text-align:left;}
-table.cron-tabla th{background:#f5f2ee;font-weight:700;position:sticky;top:0;}
-table.cron-tabla .th-mes{background:var(--head);color:#fff;text-align:center;font-size:9px;text-transform:uppercase;letter-spacing:.05em;}
-table.cron-tabla .th-dia{text-align:center;color:var(--mu);font-size:9px;text-transform:uppercase;}
-table.cron-tabla .th-fecha{text-align:center;font-family:'Space Mono',monospace;font-weight:800;color:var(--ac);}
-table.cron-tabla .th-cant{text-align:center;font-size:10px;color:#ccc;background:#faf8f5;}
-table.cron-tabla .th-cant-on{color:#fff;background:var(--yl);font-weight:800;}
-.btn-print-dia{background:none;border:none;cursor:pointer;font-size:11px;padding:0;margin-left:2px;}
-table.cron-tabla .fila-cat td{background:var(--ac);color:#fff;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.04em;}
-table.cron-tabla .col-info{font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis;}
-table.cron-tabla .col-jj{font-family:'Space Mono',monospace;font-weight:700;color:var(--ac);}
-.cron-celda{text-align:center;cursor:pointer;min-width:56px;}
-.cron-celda:hover{background:#fff8f0;}
-.est-badge{display:inline-block;padding:3px 7px;border-radius:20px;font-size:10px;font-weight:800;white-space:nowrap;color:#fff;}
-.est-vacio{color:#ccc;font-size:14px;font-weight:800;}
-.est-arevisar{background:var(--yl);}
-.est-revisado{background:var(--gn);}
-.est-pasado{background:var(--rd);}
-.cron-informe{font-size:8.5px;color:var(--mu);display:block;margin-top:1px;}
+.success{text-align:center;padding:48px 20px 20px;}
+.success .ic{font-size:72px;margin-bottom:14px;}
+.success h2{font-size:24px;font-weight:800;color:var(--gn);margin-bottom:6px;}
+.success p{font-size:14px;color:var(--mu);margin-bottom:20px;}
+.success .det{background:var(--card);border:1px solid var(--br);border-radius:10px;padding:14px;text-align:left;font-size:13px;margin-bottom:20px;}
+.nuevo-btn{background:var(--ac);color:#fff;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;}
+.aviso-final{background:#fff8e1;border:1.5px solid #f0c14b;border-radius:10px;padding:14px 16px;text-align:left;font-size:13px;color:#8a6100;margin-bottom:20px;line-height:1.5;}
 </style>
 </head>
 <body>
 
 <div class="hdr">
-  <div class="hdr-left">
-    <div class="ey">Akapol · Mantenimiento</div>
-    <h1>Control de Equipos</h1>
-  </div>
-  <button class="btn btn-gh" onclick="actualizarTodo()">🔄 Actualizar</button>
+  <div class="ey">Akapol · Mantenimiento</div>
+  <h1>Equipo de Elevación</h1>
+  <p id="hdrSub">Reservá el equipo o registrá el cierre de uso</p>
 </div>
 
-<div class="wrap">
-  <div class="status-line" id="estadoSync">Conectando con la planilla...</div>
-
-  <div class="resumen">
-    <div class="resumen-box"><div class="num" id="rTotal">0</div><div class="lbl">Total equipos</div></div>
-    <div class="resumen-box ok"><div class="num" id="rOk">0</div><div class="lbl">Al día</div></div>
-    <div class="resumen-box por"><div class="num" id="rPor">0</div><div class="lbl">Por vencer</div></div>
-    <div class="resumen-box venc"><div class="num" id="rVenc">0</div><div class="lbl">Vencido / sin revisar</div></div>
-  </div>
-
-  <div id="panelCronograma">
-    <div class="cron-nav">
-      <button class="btn btn-gh" onclick="cambiarMes(-1)">◀</button>
-      <div class="cron-mes-label" id="cronMesLabel">Agosto 2026</div>
-      <button class="btn btn-gh" onclick="cambiarMes(1)">▶</button>
-    </div>
-    <div class="cron-scroll">
-      <table class="cron-tabla" id="cronTabla"></table>
-    </div>
-  </div>
+<div class="modo-bar">
+  <button class="modo-btn on" id="btnModoReservar" onclick="setModo('reservar')">📅 Reservar turno</button>
+  <button class="modo-btn" id="btnModoCierre" onclick="setModo('cierre')">✅ Cerrar uso</button>
 </div>
 
-<div id="printARevisar" class="print-only"></div>
+<!-- ═══════════ MODO RESERVAR ═══════════ -->
+<div class="step on" id="pantallaReservarForm">
+  <div class="slbl" style="margin-top:0">Fecha de uso</div>
+  <input type="date" id="rFecha" class="date-field">
+  <div id="dispoBox" style="margin-top:10px;font-size:12.5px;color:var(--mu)"></div>
 
-<!-- Modal: agregar mantenimiento -->
-<div class="modal-bg" id="modalNuevo">
-  <div class="modal">
-    <button class="modal-cerrar" onclick="cerrarModalNuevo()">✕</button>
-    <h3 id="modalNuevoTitulo">Nuevo mantenimiento</h3>
-    <div class="f">
-      <label>Fecha</label>
-      <input type="date" id="mFecha">
+  <div class="slbl">Horario</div>
+  <div class="row2">
+    <input type="time" id="rDesde" class="date-field" placeholder="Desde">
+    <input type="time" id="rHasta" class="date-field" placeholder="Hasta">
+  </div>
+
+  <div id="fichaWrapR">
+    <div class="slbl">Número de ficha</div>
+    <div style="position:relative">
+      <input type="text" id="rFicha" class="date-field" placeholder="Ej: ZZ01722" oninput="onFichaInput('r')" onblur="hideSugg('r')" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase;width:100%">
+      <div id="rFichaSugg" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--ac);border-top:none;border-radius:0 0 10px 10px;z-index:50;max-height:220px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12)"></div>
     </div>
-    <div class="f">
-      <label>Estado</label>
-      <div class="f-estado">
-        <button type="button" class="btn-estado" id="btnEstArevisar" onclick="elegirEstado('A revisar')">🕐 A revisar</button>
-        <button type="button" class="btn-estado" id="btnEstRevisado" onclick="elegirEstado('Revisado')">✓ Revisado</button>
-        <button type="button" class="btn-estado" id="btnEstPasado" onclick="elegirEstado('Se pasó')">⚠️ Se pasó</button>
-      </div>
+    <div id="rFichaResult" style="display:none;margin-top:10px;background:#fff;border:1.5px solid var(--br);border-radius:10px;padding:14px 16px">
+      <div style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Persona encontrada</div>
+      <div id="rFichanom" style="font-size:17px;font-weight:800;color:var(--tx)">—</div>
+      <div id="rFichasec" style="font-size:13px;color:var(--mu);margin-top:3px">—</div>
     </div>
-    <div id="camposInforme" style="display:none">
-      <div class="f">
-        <label>N° de informe</label>
-        <input type="text" id="mInforme" placeholder="Ej: INF-2026-0034">
-      </div>
+    <div id="rFichaError" style="display:none;margin-top:10px;background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:12px 16px;font-size:13px;color:#c62828">
+      ⚠️ No se encontró ninguna persona con esa ficha.
     </div>
-    <div id="camposReprogramada" style="display:none">
-      <div class="f">
-        <label>Nueva fecha estimada</label>
-        <input type="date" id="mFechaReprogramada">
-      </div>
-    </div>
-    <div class="f">
-      <label>Observaciones (opcional)</label>
-      <textarea id="mObs" placeholder="Detalle de lo realizado, o motivo si se pasó..."></textarea>
-    </div>
-    <button class="btn btn-ac" style="width:100%;margin-top:16px" onclick="confirmarNuevoMantenimiento()">Guardar</button>
-    <button class="btn btn-gh" id="btnEliminarDesdeModal" style="width:100%;margin-top:8px;display:none;color:var(--rd);border-color:var(--rd)" onclick="eliminarDesdeModalNuevo()">🗑 Eliminar este registro</button>
+  </div>
+
+  <div class="check-row" onclick="toggleTercero()">
+    <div class="check-box" id="checkTercero"></div>
+    <div class="check-lbl">Es para que lo use otra persona</div>
+  </div>
+  <div id="terceroWrap" style="display:none;margin-top:10px">
+    <input type="text" id="terceroNombre" class="date-field" placeholder="Nombre o razón social de quien va a usar el equipo">
+  </div>
+
+  <div class="slbl">Motivo / Tarea (opcional)</div>
+  <textarea class="obs-inp" id="rMotivo" rows="3" placeholder="Ej: Cambio de luminaria en línea 3..."></textarea>
+</div>
+
+<div class="step" id="pantallaReservarExito">
+  <div class="success">
+    <div class="ic">✅</div>
+    <h2>¡Turno reservado!</h2>
+    <p id="rSuccMsg"></p>
+    <div class="det" id="rSuccDet"></div>
+    <button class="nuevo-btn" onclick="resetReservar()">Hacer otra reserva</button>
   </div>
 </div>
 
-<!-- Modal: historial de un equipo -->
-<div class="modal-bg" id="modalHist">
-  <div class="modal">
-    <button class="modal-cerrar" onclick="cerrarModalHist()">✕</button>
-    <h3 id="modalHistTitulo">Historial</h3>
-    <div id="modalHistBody"></div>
+<!-- ═══════════ MODO CIERRE ═══════════ -->
+<div class="step" id="pantallaCierreForm">
+  <div class="slbl" style="margin-top:0">Fecha</div>
+  <input type="date" id="cFecha" class="date-field">
+
+  <div class="slbl">Hora de finalización</div>
+  <input type="time" id="cHora" class="date-field">
+
+  <div class="slbl">Número de ficha (quien usó el equipo)</div>
+  <div style="position:relative">
+    <input type="text" id="cFicha" class="date-field" placeholder="Ej: ZZ01722" oninput="onFichaInput('c')" onblur="hideSugg('c')" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase;width:100%">
+    <div id="cFichaSugg" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--ac);border-top:none;border-radius:0 0 10px 10px;z-index:50;max-height:220px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12)"></div>
   </div>
+  <div id="cFichaResult" style="display:none;margin-top:10px;background:#fff;border:1.5px solid var(--br);border-radius:10px;padding:14px 16px">
+    <div style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Persona encontrada</div>
+    <div id="cFichanom" style="font-size:17px;font-weight:800;color:var(--tx)">—</div>
+    <div id="cFichasec" style="font-size:13px;color:var(--mu);margin-top:3px">—</div>
+  </div>
+  <div id="cFichaError" style="display:none;margin-top:10px;background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:12px 16px;font-size:13px;color:#c62828">
+    ⚠️ No se encontró ninguna persona con esa ficha.
+  </div>
+
+  <div class="slbl">Estado del equipo</div>
+  <div class="estado-btns">
+    <button type="button" class="estado-btn" id="btnEstadoOk" onclick="setEstado('ok')">✅ Sin novedades</button>
+    <button type="button" class="estado-btn" id="btnEstadoNov" onclick="setEstado('nov')">⚠️ Con novedad</button>
+  </div>
+
+  <div class="slbl">Observaciones <span id="obsOblig" style="display:none;color:#c62828">(obligatorio)</span></div>
+  <textarea class="obs-inp" id="cObs" rows="3" placeholder="Detalle cualquier novedad, golpe, falla, etc."></textarea>
+
+  <div class="slbl">Foto del equipo al finalizar</div>
+  <div class="foto-box">
+    <div class="foto-preview" id="cFotoPreview"><span class="ph">Sin foto</span></div>
+    <label class="btn-foto">📷 Elegir foto<input type="file" accept="image/*" id="cFotoInput"></label>
+  </div>
+  <div class="aviso-foto" id="avisoFotoTexto">✅ La foto se sube automáticamente junto con el cierre. Al tocar <b>"Registrar cierre"</b> también se va a abrir WhatsApp para avisarle a mantenimiento.</div>
+</div>
+
+<div class="step" id="pantallaCierreExito">
+  <div class="success">
+    <div class="ic">✅</div>
+    <h2>¡Cierre registrado!</h2>
+    <p>La foto ya quedó guardada junto con el registro.</p>
+    <div class="det" id="cSuccDet"></div>
+    <button class="nuevo-btn" onclick="resetCierre()">Registrar otro cierre</button>
+  </div>
+</div>
+
+<div class="bottom" id="bottomReservar">
+  <button class="btn" id="btnReservar" onclick="enviarReserva()" disabled>Reservar turno →</button>
+</div>
+<div class="bottom" id="bottomCierre" style="display:none">
+  <button class="btn" id="btnCierre" onclick="enviarCierre()" disabled>Registrar cierre →</button>
 </div>
 
 <script>
-var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzjhxma29dSTiEdpZvUg-eMLbpId_jWX6NGfg1VhrZcjdecymsf4lqkZsIvWmpcr7qd/exec';
-var FRECUENCIA_DIAS = 30;
+var WA_NUM = '5491164101134';
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWu2XL7KSKrnCHpEX3bQjZZoKSyimJbegatN1VXB_hSoMUM8JYfGHPUMBD6FMFKh07/exec';
+var PERSONAL = [{"leg": "ZZ03116", "ini": "GIJ", "ap": "JEREZ", "nom": "GUIDO IVAN", "sector": "RL221110 TEJOS", "rl": "RL221110 TEJOS"}, {"leg": "ZZ01722", "ini": "HFA", "ap": "ACUÑA", "nom": "HORACIO FELIX", "sector": "RL221110 TEJOS", "rl": "RL221110 TEJOS"}, {"leg": "ZZ02720", "ini": "IMG", "ap": "GERBER", "nom": "IGNACIO MATIAS", "sector": "RL221110 TEJOS", "rl": "RL221110 TEJOS"}, {"leg": "ZZ02884", "ini": "MAD", "ap": "DIAZ", "nom": "MIGUEL ADRIAN", "sector": "RL221110 TEJOS", "rl": "RL221110 TEJOS"}, {"leg": "ZZ02268", "ini": "UAS", "ap": "SAAVEDRA", "nom": "JUAN", "sector": "RL221110 TEJOS", "rl": "RL221110 TEJOS"}, {"leg": "ZZ01721", "ini": "AFK", "ap": "KALBIN", "nom": "ALCIDES FABIAN", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01036", "ini": "AFM", "ap": "MARCHESSE", "nom": "ADRIAN FABIO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02865", "ini": "AIG", "ap": "GUY", "nom": "ALAN IVAN", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01960", "ini": "AOA", "ap": "AGUIRREZ", "nom": "ALBERTO OSCAR", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01950", "ini": "CBM", "ap": "MARTINEZ", "nom": "CARLOS ALBERTO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02324", "ini": "CDM", "ap": "MARTINEZ", "nom": "RICARDO DANIEL", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02271", "ini": "CFM", "ap": "MAZUR", "nom": "CESAR FERNANDO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02780", "ini": "CJB", "ap": "BARBOSA", "nom": "CRISTIAN JULIO MARIANO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01958", "ini": "CMB", "ap": "BROQUE", "nom": "CEFERINO MELCHOR", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ00887", "ini": "COL", "ap": "LEIVA", "nom": "CARLOS ROBERTO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01988", "ini": "CRA", "ap": "ARGÜELLO", "nom": "CELSO RENE", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02335", "ini": "CRV", "ap": "VERON", "nom": "CARLOS RUBEN", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02827", "ini": "EIE", "ap": "ESCALANTE", "nom": "ELISEO ISAAC", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02864", "ini": "EMG", "ap": "GODOY", "nom": "EMILIANO RICARDO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02035", "ini": "EMV", "ap": "VERON", "nom": "MAXIMILIANO MARTIN", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02889", "ini": "FEJ", "ap": "FERREYRA", "nom": "JORGE ANDRES", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01042", "ini": "FMC", "ap": "CASTILLO", "nom": "FRANCISCO MIGUEL", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01730", "ini": "GAJ", "ap": "JARDON", "nom": "GERARDO ANDRES", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01949", "ini": "HAM", "ap": "MENDOZA", "nom": "HUGO ALBERTO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01980", "ini": "HEA", "ap": "ALMADA", "nom": "HECTOR", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02719", "ini": "HJL", "ap": "LEONE", "nom": "HERNAN JAVIER", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01971", "ini": "JCD", "ap": "DIAZ", "nom": "JORGE CLAUDIO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02387", "ini": "JEC", "ap": "CARDENIA", "nom": "JORGE ELISEO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01227", "ini": "JFG", "ap": "GODOY", "nom": "JOSE FORTUNATO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02414", "ini": "JGA", "ap": "ALEGRE", "nom": "JULIO GASTON", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01977", "ini": "JLB", "ap": "BARRIOS", "nom": "JOSE LUIS", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ00169", "ini": "LLB", "ap": "BALLERINI", "nom": "LUIS ALBERTO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ03106", "ini": "LNC", "ap": "COLMAN", "nom": "LEONARDO NICOLAS", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01555", "ini": "LOC", "ap": "CERRI", "nom": "LEONARDO RODOLFO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02639", "ini": "MEN", "ap": "NEGRONI", "nom": "MAURO EZEQUIEL", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02383", "ini": "MJH", "ap": "HERRERA", "nom": "MARCELO JULIAN", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02580", "ini": "MLA", "ap": "ALBORNOZ", "nom": "MARTIN LEONARDO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01989", "ini": "MLB", "ap": "BUSTAMANTE", "nom": "MERCEDES LUCINDO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01951", "ini": "NCI", "ap": "IMIDIO", "nom": "NESTOR CECILIO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ03143", "ini": "NES", "ap": "SALTO", "nom": "NICOLAS EZEQUIEL", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02356", "ini": "NRM", "ap": "MIRANDA", "nom": "NELSON RAMON", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02338", "ini": "OOM", "ap": "MACHADO", "nom": "JOSE OMAR", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02874", "ini": "POI", "ap": "PEREZ", "nom": "OSCAR ISMAEL", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01967", "ini": "PRG", "ap": "GOROSITO", "nom": "PEDRO RAMON", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02332", "ini": "PRP", "ap": "PEREZ", "nom": "PABLO RICARDO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02561", "ini": "RDZ", "ap": "MAZARS", "nom": "RICARDO DANIEL", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02397", "ini": "SAD", "ap": "DEMARCO", "nom": "SEBASTIAN ANDRES", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01991", "ini": "SDB", "ap": "BARCALA", "nom": "SANTIAGO DAVID", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02348", "ini": "SEM", "ap": "MENDEZ", "nom": "GASTON EDUARDO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02041", "ini": "TAB", "ap": "BRAVO", "nom": "MATIAS ALBERTO", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ02272", "ini": "VRD", "ap": "DIAZ", "nom": "VICTOR ROGER", "sector": "RL221120 POMOS", "rl": "RL221120 POMOS"}, {"leg": "ZZ01972", "ini": "EAT", "ap": "TAVOLINI", "nom": "ENRIQUE ALEJANDRO", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ02270", "ini": "FEG", "ap": "GIANNOTTI", "nom": "FABIAN ENRIQUE", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ02032", "ini": "FOV", "ap": "VALLORY", "nom": "FLAVIO OSCAR", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ01962", "ini": "GMA", "ap": "GONZALEZ", "nom": "MARIO ALBERTO", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ01998", "ini": "JEM", "ap": "MEMBREDES", "nom": "JUAN EDUARDO", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ02384", "ini": "PSS", "ap": "SORIA", "nom": "PABLO SEBASTIAN", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ02781", "ini": "RFE", "ap": "ENGEL", "nom": "RICARDO FABRICIO", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ02337", "ini": "SAU", "ap": "ULIAMBRE", "nom": "SERGIO ANDRES", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ01713", "ini": "VAF", "ap": "FLEITAS", "nom": "VICTOR ANTONIO", "sector": "Pomos Mantenimiento", "rl": "RL221130 MANT.TEJOS Y POMOS"}, {"leg": "ZZ01954", "ini": "ADF", "ap": "FRENA", "nom": "ALEJANDRO DIEGO", "sector": "Pomos  Jefatura (arriba)", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ01588", "ini": "CWA", "ap": "AGUIRRE", "nom": "WALTER CLAUDIO", "sector": "Pomos  Supervisores (abajo)", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ02636", "ini": "DAB", "ap": "BARREIRO", "nom": "DANIEL ALEJANDRO", "sector": "Pomos Mantenimiento", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ02349", "ini": "EAL", "ap": "LOPEZ", "nom": "CESAR ANIBAL", "sector": "Pomos  Supervisores (abajo)", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ01984", "ini": "ERB", "ap": "BELOQUI", "nom": "EDUARDO RAMON", "sector": "Pomos  Supervisores (abajo)", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ02398", "ini": "GAL", "ap": "LOPEZ", "nom": "GUILLERMO ALEJANDRO", "sector": "Pomos Mantenimiento", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ01955", "ini": "JRR", "ap": "ROMERO", "nom": "JUAN CARLOS", "sector": "Pomos  Supervisores (abajo)", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ02369", "ini": "MAC", "ap": "CHAMORRO", "nom": "MIGUEL ANGEL", "sector": "Pomos  Fundicion", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ02264", "ini": "OAL", "ap": "LEIVA", "nom": "OMAR ALBERTO", "sector": "Pomos Mantenimiento", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ01714", "ini": "RCU", "ap": "ULLMANN", "nom": "ROBERTO CARLOS", "sector": "Pomos  Supervisores (abajo)", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ01945", "ini": "RIR", "ap": "RIOS", "nom": "RUBEN DARIO", "sector": "Pomos  Supervisores (abajo)", "rl": "RL221190 ADM.TEJOS Y POMOS ND"}, {"leg": "ZZ03355", "ini": "DFM", "ap": "MANSILLA", "nom": "DAMIAN FERNANDO", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ02820", "ini": "ELT", "ap": "LEZCANO", "nom": "DIEGO MARTIN", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ00975", "ini": "EVP", "ap": "PARENTI", "nom": "ESTEBAN VICENTE", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ00984", "ini": "GAU", "ap": "UÑATES", "nom": "GUSTAVO ALBERTO", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ02514", "ini": "ICJ", "ap": "IBARGUREN", "nom": "CARLOS JAVIER", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ03166", "ini": "JCI", "ap": "CANDIA", "nom": "CARLOS ALEJANDRO", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ01636", "ini": "JTC", "ap": "CABRERA", "nom": "JORGE ANTONIO", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ02569", "ini": "PDM", "ap": "MODROW", "nom": "PABLO DAMIAN", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ03098", "ini": "RCF", "ap": "FERRARI", "nom": "ROBERTO CARLOS", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ02669", "ini": "ROJ", "ap": "RONDAN", "nom": "OSCAR JESUS", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ02952", "ini": "SMA", "ap": "SEQUEIRA", "nom": "MIGUEL ANTONIO", "sector": "RL221210 FORMULADO", "rl": "RL221210 FORMULADO"}, {"leg": "ZZ02828", "ini": "ABC", "ap": "CABRERA", "nom": "ALFREDO BERNABE", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02799", "ini": "ACI", "ap": "ARIAS", "nom": "CARLINA ISABEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03429", "ini": "AEI", "ap": "AGUIRRE", "nom": "ENRIQUE IGNACIO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02970", "ini": "AJA", "ap": "ALVAREZ", "nom": "JUAN ANDRES", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03411", "ini": "ARY", "ap": "ACOSTA", "nom": "YIRCA MARIEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02489", "ini": "AVP", "ap": "PETRUCCI", "nom": "ANALIA VERONICA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03416", "ini": "BDB", "ap": "BLANCO", "nom": "DAIANA BELEN", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02518", "ini": "BEA", "ap": "BAZAN", "nom": "EDGARDO ANIBAL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03085", "ini": "BJN", "ap": "BURGOS", "nom": "JONATAN NAHUEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02844", "ini": "BJR", "ap": "BORGES", "nom": "JORGE RICARDO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02917", "ini": "BSC", "ap": "BENITEZ SPRENK", "nom": "CARLA SOLEDAD", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02680", "ini": "CCA", "ap": "CLAVERIA", "nom": "CLAUDIO ANIBAL IGNACIO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02396", "ini": "CHP", "ap": "PIREZ", "nom": "CARLOS HERNAN", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03401", "ini": "CKN", "ap": "CIRCOSTA", "nom": "KARINA NOEMI", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02609", "ini": "CLI", "ap": "IBARRA", "nom": "CRISTIAN LEONEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03422", "ini": "DCA", "ap": "CAMPILLAY", "nom": "DIEGO TOMAS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02819", "ini": "DDA", "ap": "ABOYO", "nom": "DIEGO ALEJANDRO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02592", "ini": "DMG", "ap": "GHIOZZI", "nom": "DIEGO MARTIN", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03431", "ini": "EAJ", "ap": "JACOB", "nom": "ENRIQUE ALBERTO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02500", "ini": "ECE", "ap": "ESPIL", "nom": "ELISABET CELESTE", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ01277", "ini": "EFL", "ap": "LOPEZ", "nom": "EMILIO FRANCISCO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02528", "ini": "EIL", "ap": "LEGUIZAMO", "nom": "ENRIQUE IGNACIO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02319", "ini": "ENM", "ap": "MEMBREDES", "nom": "EDUARDO NICOLAS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02302", "ini": "EOJ", "ap": "JAMBRINA", "nom": "EMILIO OSCAR", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03423", "ini": "FJV", "ap": "VELEZ", "nom": "FERNANDO JOAQUIN", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02713", "ini": "FMS", "ap": "SANTILLAN", "nom": "FABIO MARCELO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02792", "ini": "FPE", "ap": "FERNANDEZ", "nom": "PAULA ESTER", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03399", "ini": "GAF", "ap": "FRIAS", "nom": "GUSTAVO ARIEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02545", "ini": "GEZ", "ap": "ZAPATA", "nom": "GUSTAVO EZEQUIEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02855", "ini": "IGV", "ap": "ISLA", "nom": "GLORIA VERONICA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ01635", "ini": "JAB", "ap": "BENGOCHEA", "nom": "JORGE ALBERTO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ01597", "ini": "JCP", "ap": "PACCIORETTI", "nom": "JUAN CARLOS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02507", "ini": "JJA", "ap": "ARANDA", "nom": "JUAN JOSE", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ01676", "ini": "JLO", "ap": "OJEDA", "nom": "JORGE LUIS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ00715", "ini": "JOA", "ap": "ALMIRON", "nom": "JOSE OMAR", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03410", "ini": "JSM", "ap": "JUAREZ", "nom": "SERGIO MATIAS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02304", "ini": "LFD", "ap": "DAGOSTINO", "nom": "LEONARDO FRANCISCO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02465", "ini": "LGB", "ap": "BARRIOS", "nom": "LEONARDO GASTON", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03110", "ini": "LUC", "ap": "CERIO", "nom": "LUCAS NICOLAS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03417", "ini": "MMD", "ap": "MAIDANA", "nom": "MARCELO DAMIAN", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02818", "ini": "MNN", "ap": "MENDEZ", "nom": "NORBERTO MANUEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02646", "ini": "MUY", "ap": "YAGUAR", "nom": "MIRTA VANESA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02605", "ini": "MVM", "ap": "MÜLLER", "nom": "MARIA VICTORIA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02490", "ini": "OJP", "ap": "PEREZ", "nom": "ORLANDO JAVIER", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02919", "ini": "OMY", "ap": "ORDOÑEZ", "nom": "MARA YANINA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02515", "ini": "OZM", "ap": "ORTIZ", "nom": "MARINA ANAHI", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02709", "ini": "PDR", "ap": "ROLAISER", "nom": "PEDRO DAVID", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02594", "ini": "PNG", "ap": "GUERRA", "nom": "PABLO NICOLAS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02895", "ini": "PRD", "ap": "PANIAGUA", "nom": "RODOLFO DANIEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03397", "ini": "PVR", "ap": "PEREYRA", "nom": "VANINA ROSANA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02852", "ini": "RCR", "ap": "RODRIGUEZ", "nom": "CAROLINA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ01469", "ini": "REU", "ap": "FUENTES", "nom": "RUBEN ERNESTO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03420", "ini": "RGO", "ap": "GOROSITO", "nom": "RODRIGO DAVID", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03402", "ini": "RMD", "ap": "ROJAS", "nom": "MARCOS DANIEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02510", "ini": "RNW", "ap": "ROSALES", "nom": "NELSON WALTER", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ00927", "ini": "ROM", "ap": "MARTINEZ", "nom": "RENE ROBERTO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02625", "ini": "RSM", "ap": "MONTIEL", "nom": "ROMINA SUSANA", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ00974", "ini": "SAC", "ap": "CENTURION", "nom": "SALVADOR", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03412", "ini": "SAG", "ap": "SANCHEZ", "nom": "AGUSTIN GABINO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03062", "ini": "SCH", "ap": "SILVESTRI", "nom": "CRISTIAN HERNAN", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02973", "ini": "SDJ", "ap": "SANCHEZ", "nom": "DIEGO JOSE", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03427", "ini": "SME", "ap": "SOSA", "nom": "MATIAS EMANUEL", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02705", "ini": "SMP", "ap": "PEREZ", "nom": "SANDRO MARCELO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02888", "ini": "SWD", "ap": "SOSA", "nom": "WALTER DAVID", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02806", "ini": "TJL", "ap": "TEDESCO", "nom": "JORGE LUIS", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02591", "ini": "VBB", "ap": "BEJARANO", "nom": "VICENTE BENJAMIN", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ03069", "ini": "WCF", "ap": "WIEDMANN", "nom": "CRISTIAN FEDERICO", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02823", "ini": "WEF", "ap": "DRAGUN", "nom": "HORACIO SERGIO GASTON", "sector": "RL221220 ENVASADO Y EMPAQUE", "rl": "RL221220 ENVASADO Y EMPAQUE"}, {"leg": "ZZ02513", "ini": "ABA", "ap": "ALBORNOZ", "nom": "ALVARO BRUNO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02295", "ini": "AHM", "ap": "MARECO", "nom": "CARLOS HORACIO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02311", "ini": "AIR", "ap": "ROMERO", "nom": "DAVID ISMAEL", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02393", "ini": "ARS", "ap": "SOLARI", "nom": "ANGEL ROBERTO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02629", "ini": "CGZ", "ap": "ZARZA", "nom": "CLAUDIO GABRIEL", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02370", "ini": "DAS", "ap": "SEQUEIRA", "nom": "DARDO ANTONIO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ03066", "ini": "DFN", "ap": "DOMINGUEZ", "nom": "FERNANDO NICOLAS", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02382", "ini": "DOM", "ap": "MARTINEZ", "nom": "DIEGO OMAR", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02789", "ini": "EGR", "ap": "ESCUDERO", "nom": "GRACIELA ROSALIA", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02628", "ini": "GMR", "ap": "GARCIA", "nom": "MARIA ROSA", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ01517", "ini": "HRR", "ap": "ROLDAN", "nom": "HERNAN RICARDO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02448", "ini": "JMZ", "ap": "ZUNINO", "nom": "JUAN MANUEL", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02316", "ini": "LDA", "ap": "AÑEL", "nom": "LEANDRO DAVID", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02379", "ini": "LEA", "ap": "ARALDI", "nom": "LUCAS EDUARDO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02807", "ini": "MCA", "ap": "MIÑO", "nom": "CAROLINA ALEJANDRA", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ03063", "ini": "MOR", "ap": "MORENO", "nom": "MIGUEL ANGEL", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02585", "ini": "MVP", "ap": "PERUGINI", "nom": "MARIA VANESA", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ01590", "ini": "POM", "ap": "MANSILLA", "nom": "PEDRO OSVALDO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02779", "ini": "RRJ", "ap": "RIOS", "nom": "RICARDO JAVIER", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02299", "ini": "UEM", "ap": "MAGALHAES", "nom": "AGUSTIN EMILIANO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ01608", "ini": "VAL", "ap": "LINCHES", "nom": "VALERIO ANTONIO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02362", "ini": "VCB", "ap": "BLASICH", "nom": "VICENTE CRISPIN", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ03082", "ini": "ZCA", "ap": "ZANOTTI", "nom": "CARLOS ALBERTO", "sector": "RL221230 INYECCION Y SOPLADO", "rl": "RL221230 INYECCION Y SOPLADO"}, {"leg": "ZZ02504", "ini": "MNI", "ap": "MORETTONI", "nom": "NICOLAS", "sector": "RL221250 MANT.MOLDES/MATRICES", "rl": "RL221250 MANT.MOLDES/MATRICES"}, {"leg": "ZZ02521", "ini": "MNM", "ap": "MERINO CHIOSSO", "nom": "MAURICIO NAHUEL", "sector": "RL221250 MANT.MOLDES/MATRICES", "rl": "RL221250 MANT.MOLDES/MATRICES"}, {"leg": "ZZ02038", "ini": "SEA", "ap": "ASSELBORN", "nom": "SERGIO GASTON", "sector": "RL221250 MANT.MOLDES/MATRICES", "rl": "RL221250 MANT.MOLDES/MATRICES"}, {"leg": "ZZ03194", "ini": "AHE", "ap": "ALMEIDA", "nom": "HECTOR ALEXIS", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ03421", "ini": "COD", "ap": "CISNEROS", "nom": "OSVALDO DAVID", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ01038", "ini": "CUM", "ap": "MAÑANES", "nom": "CRISTIAN RUBEN", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ03432", "ini": "CWF", "ap": "CORVALAN", "nom": "WALTER FABIAN", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ03067", "ini": "EEL", "ap": "ECKERDT", "nom": "EMILIO LEON", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ02951", "ini": "FGM", "ap": "MOYANO", "nom": "FERNANDO GABRIEL", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ03377", "ini": "JAL", "ap": "LEIVA", "nom": "JORGE ALBERTO", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ00912", "ini": "JJD", "ap": "DOME", "nom": "JUAN JOSE", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL221290 ADHESIVOS/ANEXOS ND"}, {"leg": "ZZ03233", "ini": "AFQ", "ap": "RUIZ AQUINO", "nom": "ALBERTO FEDERICO", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ03253", "ini": "BEC", "ap": "BERTANI", "nom": "CHRISTIAN ALBERTO", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ03396", "ini": "BEE", "ap": "BARREYRO", "nom": "EMILIANO EZEQUIEL", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02893", "ini": "DFG", "ap": "DEANDREA", "nom": "FABIAN GUILLERMO", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02835", "ini": "DMZ", "ap": "MANSILO ZANON", "nom": "DIEGO HERNAN", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02981", "ini": "GPA", "ap": "GONZALEZ", "nom": "PASCUAL ADRIAN", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ03391", "ini": "JIS", "ap": "ISNARDO", "nom": "JAVIER RAUL MATIAS", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02753", "ini": "LJM", "ap": "MORALES", "nom": "LUIS JAVIER", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02522", "ini": "LRM", "ap": "LUJAN", "nom": "RAMON MANUEL AVELINO", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02832", "ini": "MJL", "ap": "LUNA", "nom": "MARIANO JAVIER", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02620", "ini": "MRB", "ap": "BRUSA", "nom": "MARCELO ADRIAN", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02400", "ini": "OEF", "ap": "FERNANDEZ", "nom": "JORGE ERNESTO", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ02390", "ini": "REG", "ap": "GRASSO", "nom": "MARIANO EDUARDO", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ01400", "ini": "REM", "ap": "MARTINEZ", "nom": "RUBEN ERNESTO", "sector": "Mantenimiento Supervisor", "rl": "RL221310 MANTEN.EQ.E INSTAL."}, {"leg": "ZZ01268", "ini": "DOP", "ap": "PEREZ", "nom": "DANIEL OSVALDO", "sector": "Mantenimiento Supervisor", "rl": "RL221390 ADM.MANTENIMIENTO ND"}, {"leg": "ZZ03072", "ini": "LBR", "ap": "REYN", "nom": "LUCIANO BENJAMIN", "sector": "Mantenimiento Supervisor", "rl": "RL221390 ADM.MANTENIMIENTO ND"}, {"leg": "ZZ03359", "ini": "MTF", "ap": "CORONEL", "nom": "MATÍAS RODOLFO", "sector": "Mantenimiento Supervisor", "rl": "RL221390 ADM.MANTENIMIENTO ND"}, {"leg": "ZZ01604", "ini": "OEI", "ap": "IBARRA", "nom": "OMAR ENRIQUE", "sector": "Mantenimiento / Ingenieria (Jefatura)", "rl": "RL221390 ADM.MANTENIMIENTO ND"}, {"leg": "ZZ01120", "ini": "PGF", "ap": "PEÑALBA", "nom": "GABRIELA FERNANDA", "sector": "Mantenimiento / Ingenieria (Jefatura)", "rl": "RL221390 ADM.MANTENIMIENTO ND"}, {"leg": "ZZ03184", "ini": "LHP", "ap": "PAREDES", "nom": "LUCIANO HERNAN", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL221400 PLANIFIC.PRODUCCION"}, {"leg": "ZZ02434", "ini": "NHN", "ap": "NICOLETTI", "nom": "NESTOR HUGO", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL221400 PLANIFIC.PRODUCCION"}, {"leg": "ZZ02784", "ini": "BAG", "ap": "BISIGNANO", "nom": "ALEJANDRO GABRIEL", "sector": "Enfermeria", "rl": "RL222190 ADM.RRHH ZELAYA ND"}, {"leg": "ZZ03351", "ini": "CCS", "ap": "SIRAKE", "nom": "CLAUDIA CARINA", "sector": "Enfermeria", "rl": "RL222190 ADM.RRHH ZELAYA ND"}, {"leg": "ZZ03283", "ini": "EVG", "ap": "GERARDI", "nom": "EVANGELINA MARGARITA", "sector": "Enfermeria", "rl": "RL222190 ADM.RRHH ZELAYA ND"}, {"leg": "ZZ03340", "ini": "FRS", "ap": "SERRUDO", "nom": "FLAVIA ROXANA", "sector": "Enfermeria", "rl": "RL222190 ADM.RRHH ZELAYA ND"}, {"leg": "ZZ03284", "ini": "MSA", "ap": "PEDROSA", "nom": "MACARENA", "sector": "Gerencia_Personal", "rl": "RL222190 ADM.RRHH ZELAYA ND"}, {"leg": "ZZ03362", "ini": "NAD", "ap": "DEMARCHI", "nom": "NICOLÁS ANDRÉS", "sector": "Gerencia_Personal", "rl": "RL222190 ADM.RRHH ZELAYA ND"}, {"leg": "ZZ03264", "ini": "SGN", "ap": "SOLARI", "nom": "GASTON NICOLAS", "sector": "Gerencia_Personal", "rl": "RL222190 ADM.RRHH ZELAYA ND"}, {"leg": "ZZ02360", "ini": "BED", "ap": "DIAZ", "nom": "ABEL EDUARDO", "sector": "Almacen _Operarios", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ02608", "ini": "CML", "ap": "LARREGINA", "nom": "CRISTIAN MARCOS", "sector": "Almacen _Operarios", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ01985", "ini": "EAB", "ap": "BERTON", "nom": "EDUARDO ALDO", "sector": "Almacen _Oficina Supervisor", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ03114", "ini": "EZM", "ap": "MARRON", "nom": "MATIAS EZEQUIEL", "sector": "Almacen _Pañol", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ02929", "ini": "GDG", "ap": "GOMEZ", "nom": "GUSTAVO DANIEL", "sector": "Almacen _Operarios", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ02702", "ini": "GHM", "ap": "GHIBAUDE", "nom": "HERNAN MATIAS", "sector": "Almacen _Oficina Supervisor", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ00949", "ini": "JAH", "ap": "HILL", "nom": "JORGE ALBERTO", "sector": "Almacen _Operarios", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ00826", "ini": "JAZ", "ap": "ZELAYA", "nom": "JORGE ALBERTO", "sector": "Almacen _Oficina Supervisor", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ01970", "ini": "JCG", "ap": "GRENDELMEIER", "nom": "JULIO HECTOR", "sector": "Almacen _Pañol", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ02329", "ini": "JCM", "ap": "MONZON", "nom": "JUAN CARLOS", "sector": "Almacen _Operarios", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ02388", "ini": "JDO", "ap": "OTT", "nom": "JOSE DAVID", "sector": "Almacen _Operarios", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ02505", "ini": "MGE", "ap": "MARTINEZ", "nom": "GERARDO EZEQUIEL", "sector": "Almacen _Operarios", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ01514", "ini": "RSC", "ap": "SCHNEIDER", "nom": "ROMEO", "sector": "Almacen _Oficina Supervisor", "rl": "RL222290 ADM.RECEP.ALMAC.ND"}, {"leg": "ZZ02774", "ini": "FLG", "ap": "FLORES", "nom": "LORENA GLADYS", "sector": "C.Calidad_Laborat Plant.", "rl": "RL222360 LABORAT.FORM.Y SEMI."}, {"leg": "ZZ02548", "ini": "GCA", "ap": "GERARD", "nom": "CARINA ALEJANDRA", "sector": "C.Calidad_Laborat Plant.", "rl": "RL222360 LABORAT.FORM.Y SEMI."}, {"leg": "ZZ02692", "ini": "RRV", "ap": "RIVAS", "nom": "ROMINA VANESA", "sector": "C.Calidad_Laborat Plant.", "rl": "RL222360 LABORAT.FORM.Y SEMI."}, {"leg": "ZZ01259", "ini": "AEK", "ap": "KRABS", "nom": "ADOLFO ERNESTO", "sector": "C.Calidad_Laborat.", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ02403", "ini": "ALC", "ap": "CACERES", "nom": "LUCAS ARIEL", "sector": "C.Calidad_Inspeccion", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ02744", "ini": "AMI", "ap": "INSUA", "nom": "AGUSTIN MANUEL", "sector": "C.Calidad_Laborat.", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ02710", "ini": "DLU", "ap": "MONTENEGRO", "nom": "DIEGO LUCIANO", "sector": "C.Calidad_Inspeccion", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ01210", "ini": "GJA", "ap": "ALBORNOZ", "nom": "GUILLERMO JAVIER", "sector": "C.Calidad_Inspeccion", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ00924", "ini": "LTB", "ap": "BUCCIARELLI", "nom": "LUIS ANTONIO", "sector": "C.Calidad_Administracion", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ00882", "ini": "ORM", "ap": "MIGUELES", "nom": "OSCAR RUBEN", "sector": "C.Calidad_Inspeccion", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ02772", "ini": "PVP", "ap": "PAEZ", "nom": "VALERIA PAOLA", "sector": "C.Calidad_Administracion", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ01160", "ini": "SBM", "ap": "MARCONI", "nom": "SANDRA BEATRIZ", "sector": "C.Calidad_Laborat.", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ03403", "ini": "SMF", "ap": "SOSA", "nom": "MARCELO FABIAN", "sector": "C.Calidad_Laborat.", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ03091", "ini": "SRS", "ap": "SCAPINI", "nom": "SILVIO RAMON", "sector": "C.Calidad_Inspeccion", "rl": "RL222390 ADM.CONTROL CALID.ND"}, {"leg": "ZZ01546", "ini": "CAV", "ap": "VERZOLETTO", "nom": "CRISTIAN ADRIAN", "sector": "Expedicion_Oficina Supervisor", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ02932", "ini": "CGA", "ap": "CANO", "nom": "GUSTAVO ADRIAN", "sector": "Expedicion_Oficina Supervisor", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ01399", "ini": "GAG", "ap": "GONZALEZ", "nom": "GUSTAVO OSVALDO", "sector": "Expedicion_Operarios", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ03414", "ini": "GUA", "ap": "ALVAREZ", "nom": "GUSTAVO MARCELO", "sector": "Expedicion_Operarios", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ01386", "ini": "HEV", "ap": "VILLOTTA", "nom": "HUGO ENRIQUE", "sector": "Expedicion_Operarios", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ01291", "ini": "MGM", "ap": "MARTINEZ", "nom": "MARIO GERARDO", "sector": "Expedicion_Operarios", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ01255", "ini": "PLD", "ap": "DA SILVA", "nom": "PABLO ALBERTO", "sector": "Expedicion_Oficina Supervisor", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ02312", "ini": "RFA", "ap": "ANTUNEZ", "nom": "RAMON FELIX", "sector": "Expedicion_Operarios", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ02841", "ini": "SJP", "ap": "PODIGUE", "nom": "SANTIAGO JAVIER", "sector": "Expedicion_Operarios", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ03415", "ini": "VIL", "ap": "VILLALBA", "nom": "MARCELO ALEJANDRO", "sector": "Expedicion_Operarios", "rl": "RL222490 ADM.DEP.Y EXP.ND"}, {"leg": "ZZ01216", "ini": "AED", "ap": "DENTE", "nom": "ALEJANDRO", "sector": "Mantenimiento / Ingenieria (Jefatura)", "rl": "RL222690 ADM.INGENIERIA ND"}, {"leg": "ZZ03267", "ini": "DCI", "ap": "CISTERNA", "nom": "DAIANA MARIELA", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL222700 M.CONT./SOP.ADM.FAB."}, {"leg": "ZZ02837", "ini": "LMA", "ap": "MARTIN", "nom": "LUCIA MAGDALENA", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL222700 M.CONT./SOP.ADM.FAB."}, {"leg": "ZZ03428", "ini": "MBT", "ap": "BELHART TREMOZA", "nom": "MERCEDES JAZMIN", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL222700 M.CONT./SOP.ADM.FAB."}, {"leg": "ZZ01672", "ini": "NLF", "ap": "FRANCO", "nom": "NORA LIA", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL222700 M.CONT./SOP.ADM.FAB."}, {"leg": "ZZ03419", "ini": "NML", "ap": "LOSIO", "nom": "NICOLAS MARTIN", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL222700 M.CONT./SOP.ADM.FAB."}, {"leg": "ZZ03139", "ini": "RAL", "ap": "ALVAREZ", "nom": "ROSALBA RAQUEL", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL222700 M.CONT./SOP.ADM.FAB."}, {"leg": "ZZ03124", "ini": "BBD", "ap": "BENITEZ", "nom": "BRUNO DAMIAN", "sector": "Seguridad & Higiene", "rl": "RL222890 ADM.S.I.P.H.Y M.A."}, {"leg": "ZZ03125", "ini": "LIG", "ap": "GIMENEZ", "nom": "LISANDRO ALBERTO", "sector": "Seguridad & Higiene", "rl": "RL222890 ADM.S.I.P.H.Y M.A."}, {"leg": "ZZ02531", "ini": "SEV", "ap": "VELAZQUEZ", "nom": "SEBASTIAN", "sector": "Seguridad & Higiene", "rl": "RL222890 ADM.S.I.P.H.Y M.A."}, {"leg": "ZZ03360", "ini": "ALI", "ap": "ALI", "nom": "ROBERTO ANDRES", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03434", "ini": "AMZ", "ap": "MAZZEO", "nom": "AGOSTINA MARIA", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03312", "ini": "CGC", "ap": "GALARZA CESPEDES", "nom": "CRISTIAN ENRIQUE", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03288", "ini": "CMR", "ap": "REGNER", "nom": "CANDELA MARICEL", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ01077", "ini": "GGC", "ap": "CAMAÑO", "nom": "GUSTAVO GABRIEL", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03320", "ini": "JUP", "ap": "PERDOMENICO", "nom": "JULIAN", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03202", "ini": "LUL", "ap": "LOCOSELLI", "nom": "LUCIANA CARLA", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03393", "ini": "LUS", "ap": "SAPOSNIK", "nom": "LUCAS MARTÍN", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ02072", "ini": "MVL", "ap": "LAVRIC", "nom": "MARTIN VALENTIN", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03369", "ini": "VEM", "ap": "MULLER", "nom": "VERÓNICA", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03279", "ini": "WGO", "ap": "GOMEZ", "nom": "WALTER LEANDRO", "sector": "RL223900 JEF.INV.DESARROLLO", "rl": "RL223900 JEF.INV.DESARROLLO"}, {"leg": "ZZ03103", "ini": "ANF", "ap": "FOI", "nom": "MARIA ANA", "sector": "RL229000 GERENCIA DE FABRICA", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03357", "ini": "ANS", "ap": "SALVONI", "nom": "ALEJANDRO NICOLÁS", "sector": "Produccion Adhesivos ( OF.supervisores)", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ00074", "ini": "BET", "ap": "TUDE", "nom": "ERICA BEATRIZ", "sector": "Gerencia", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03354", "ini": "CRD", "ap": "DIEZ", "nom": "CRISTIAN ALBERTO", "sector": "Mantenimiento / Ingenieria (Jefatura)", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03309", "ini": "GBD", "ap": "DOME", "nom": "GABRIEL ANDRES", "sector": "C.Calidad_ Jefatura", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03223", "ini": "GDA", "ap": "GORRINI", "nom": "DIEGO ALBERTO", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03317", "ini": "JCH", "ap": "CHAIJ DEIK", "nom": "JOSE ALFREDO", "sector": "Seguridad & Higiene", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ01611", "ini": "MAV", "ap": "VIRETTI", "nom": "MARCELO CARLOS", "sector": "Pomos  Jefatura (arriba)", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ01621", "ini": "MJG", "ap": "GNOCATO", "nom": "MARCELO JOSE", "sector": "Gerencia_Mejora continua y PYCP", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03394", "ini": "MON", "ap": "MOLINA", "nom": "NADIA MICAELA", "sector": "Ofic.Ingenieros", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03228", "ini": "MSG", "ap": "GUALCHI", "nom": "MARIA SOLEDAD", "sector": "Gerencia_Personal", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ01111", "ini": "SSE", "ap": "SUAREZ", "nom": "SERGIO EDGARDO", "sector": "Mantenimiento / Ingenieria (Jefatura)", "rl": "RL229000 GERENCIA DE FABRICA"}, {"leg": "ZZ03418", "ini": "SSJ", "ap": "SUAREZ", "nom": "SIMON JAVIER", "sector": "Ofic.Ingenieros", "rl": "RL229000 GERENCIA DE FABRICA"}];
 
-var EQUIPOS = [{"jj": "JJ14705", "tipo": "Plataforma elevadora", "marca": "HAULOTTE", "serie": "CE148020", "capacidad": "1655", "sector": "MANTENIMIENTO", "usuario": "Uso general "}, {"jj": "JJ14907", "tipo": "Zorra", "marca": "HYSTER", "serie": "B218N29066L", "capacidad": "1800", "sector": "EXPEDICION", "usuario": "ZZ03414_ALVAREZ_GUSTAVO MARCELO"}, {"jj": "JJ14915", "tipo": "Zorra", "marca": "HYSTER", "serie": "B218N29067L", "capacidad": "1800", "sector": "POXIMIX", "usuario": "Uso general "}, {"jj": "JJ15197", "tipo": "Autoelevador", "marca": "JUNGHEINRICH", "serie": "FN5126692", "capacidad": "1800", "sector": "ALMACENES", "usuario": "ZZ02388_OTT_JOSE DAVID"}, {"jj": "JJ15438", "tipo": "Zorra", "marca": "JUNGHEINRICH", "serie": "655380", "capacidad": "2000", "sector": "EXPEDICION", "usuario": "ZZ01386_VILLOTTA_HUGO ENRIQUE"}, {"jj": "JJ15773", "tipo": "Autoelevador", "marca": "JUNGHEINRICH", "serie": "FN565432", "capacidad": "", "sector": "EXPEDICION", "usuario": "ZZ01291_MARTINEZ_MARIO GERARDO"}, {"jj": "JJ15774", "tipo": "Traspaleta", "marca": "JUNGHEINRICH", "serie": "FN939434", "capacidad": "2000", "sector": "EXPEDICION", "usuario": "ZZ01399_GONZALEZ_GUSTAVO OSVALDO"}, {"jj": "JJ15973", "tipo": "Traspaleta", "marca": "JUNGHEINRICH", "serie": "", "capacidad": "", "sector": "EXPEDICION", "usuario": "Uso general "}, {"jj": "JJ16122", "tipo": "Zorra", "marca": "", "serie": "", "capacidad": "1800", "sector": "EXPEDICION", "usuario": "ZZ03415_VILLALBA_MARCELO ALEJANDRO"}, {"jj": "JJ16156", "tipo": "Traspaleta", "marca": "HYSTER", "serie": "", "capacidad": "2000", "sector": "EXPEDICION", "usuario": "ZZ02312_ANTUNEZ_RAMON FELIX"}, {"jj": "JJ16251", "tipo": "Zorra", "marca": "HYSTER", "serie": "", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16302", "tipo": "Zorra", "marca": "HYSTER", "serie": "", "capacidad": "", "sector": "PLASTICOS", "usuario": "Uso general "}, {"jj": "JJ16315", "tipo": "Autoelevador", "marca": "HYSTER", "serie": "J160N02234C", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16662", "tipo": "Autoelevador", "marca": "JUNGHEINRICH", "serie": "", "capacidad": "", "sector": "ALMACENES", "usuario": "ZZ02360_DIAZ_ABEL EDUARDO"}, {"jj": "JJ14806", "tipo": "Autoelevador", "marca": "HYSTER", "serie": "K160N02450K", "capacidad": "1800", "sector": "EXPEDICION", "usuario": "Uso general "}, {"jj": "JJ15127", "tipo": "Zorra", "marca": "HYSTER", "serie": "B218V31452M", "capacidad": "1800", "sector": "POXIMIX", "usuario": "Uso general "}, {"jj": "JJ16946", "tipo": "Autoelevador", "marca": "HELI", "serie": "05018DE6639", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16947", "tipo": "Autoelevador", "marca": "HELI", "serie": "050181k6912", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16948", "tipo": "Autoelevador", "marca": "HELI", "serie": "05018G4808HB2", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16949", "tipo": "Zorra", "marca": "HANGCHA", "serie": "M1BDO1861", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16950", "tipo": "Zorra", "marca": "HELI", "serie": "08020J10521", "capacidad": "", "sector": "GOTITA", "usuario": "Uso general "}, {"jj": "JJ16951", "tipo": "Zorra", "marca": "HELI", "serie": "08020J10519", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16952", "tipo": "Zorra", "marca": "HELI", "serie": "080207L0733", "capacidad": "", "sector": "ALMACENES", "usuario": "Uso general "}, {"jj": "JJ16571", "tipo": "Zorra", "marca": "HYSTER", "serie": "", "capacidad": "", "sector": "POXIMIX", "usuario": "Uso general "}, {"jj": "JJ16580", "tipo": "Zorra", "marca": "HYSTER", "serie": "", "capacidad": "", "sector": "VOLIGOMA", "usuario": "Uso general "}];
+var selPersonaR = null, selPersonaC = null;
+var terceroActivo = false;
+var estadoSel = '';
+var fotoData = null;
+var modoActual = 'reservar';
 
-var MANTENIMIENTOS = [];
-var jjModalActivo = null;
-
-function esc(s){ return (s||'').toString().replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-
-function sincronizar(action, params){
-  try{
-    var payload = Object.assign({action: action}, params);
-    fetch(APPS_SCRIPT_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)})
-      .then(function(){ marcarSincronizado(true); })
-      .catch(function(err){ marcarSincronizado(false, err && err.message); });
-  }catch(err){
-    marcarSincronizado(false, 'Error antes de enviar: '+(err&&err.message));
-  }
-}
-function marcarSincronizado(ok, msg){
-  var el=document.getElementById('estadoSync');
-  if(!el) return;
-  el.textContent = ok ? '✓ Sincronizado '+new Date().toLocaleTimeString() : '⚠️ Error al sincronizar: '+(msg||'desconocido');
-  el.style.color = ok ? '#2e7d32' : '#c0392b';
+function setModo(m){
+  modoActual = m;
+  document.getElementById('btnModoReservar').classList.toggle('on', m==='reservar');
+  document.getElementById('btnModoCierre').classList.toggle('on', m==='cierre');
+  document.getElementById('pantallaReservarForm').classList.toggle('on', m==='reservar');
+  document.getElementById('pantallaReservarExito').classList.remove('on');
+  document.getElementById('pantallaCierreForm').classList.toggle('on', m==='cierre');
+  document.getElementById('pantallaCierreExito').classList.remove('on');
+  document.getElementById('bottomReservar').style.display = m==='reservar' ? 'block' : 'none';
+  document.getElementById('bottomCierre').style.display = m==='cierre' ? 'block' : 'none';
 }
 
-function cargarDesdeSheet(callback){
-  fetch(APPS_SCRIPT_URL)
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      MANTENIMIENTOS = data.mantenimientos || [];
-      marcarSincronizado(true);
-      if(callback) callback();
-    })
-    .catch(function(err){
-      marcarSincronizado(false, 'No se pudo conectar (GET): '+(err&&err.message));
-      if(callback) callback();
-    });
-}
-
-function fmtDate(iso){
-  if(!iso) return '—';
-  var p = iso.split('-');
-  if(p.length!==3) return iso;
-  return p[2]+'/'+p[1]+'/'+p[0];
-}
+// ── Fechas por defecto ──
 function hoyISO(){
   var d=new Date();
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
-function diffDias(fechaIso){
-  var hoy = new Date(hoyISO()+'T00:00:00');
-  var f = new Date(fechaIso+'T00:00:00');
-  return Math.round((hoy - f) / 86400000);
+function horaAhoraHHMM(){
+  var d=new Date();
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
 }
-function sumarDias(fechaIso, dias){
-  var f = new Date(fechaIso+'T00:00:00');
-  f.setDate(f.getDate()+dias);
-  return f.getFullYear()+'-'+String(f.getMonth()+1).padStart(2,'0')+'-'+String(f.getDate()).padStart(2,'0');
-}
-function proximoMartesOJueves(fechaIso){
-  var f = new Date(fechaIso+'T00:00:00');
-  while(f.getDay()!==2 && f.getDay()!==4){
-    f.setDate(f.getDate()+1);
-  }
-  return f.getFullYear()+'-'+String(f.getMonth()+1).padStart(2,'0')+'-'+String(f.getDate()).padStart(2,'0');
-}
+document.getElementById('rFecha').value = hoyISO();
+document.getElementById('cFecha').value = hoyISO();
+document.getElementById('cHora').value = horaAhoraHHMM();
 
-function ultimoMantenimiento(jj){
-  var deEquipo = MANTENIMIENTOS.filter(function(m){ return m.jj===jj && m.estado==='Revisado'; });
-  if(!deEquipo.length) return null;
-  deEquipo.sort(function(a,b){ return a.fecha < b.fecha ? 1 : -1; });
-  return deEquipo[0];
-}
+// ── Disponibilidad en tiempo real (consulta la planilla) ──
+function fmtDateForCompare(iso){ return fmtDate(iso); } // dd/mm/yyyy, mismo formato que guarda Apps Script
 
-function estadoEquipo(jj){
-  var ult = ultimoMantenimiento(jj);
-  if(!ult) return {estado:'venc', label:'Nunca revisado', ultima:null, proxima:null};
-  var dias = diffDias(ult.fecha);
-  var proxima = sumarDias(ult.fecha, FRECUENCIA_DIAS);
-  if(dias > FRECUENCIA_DIAS) return {estado:'venc', label:'Vencido', ultima:ult, proxima:proxima};
-  if(dias >= FRECUENCIA_DIAS-10) return {estado:'por', label:'Por vencer', ultima:ult, proxima:proxima};
-  return {estado:'ok', label:'Al día', ultima:ult, proxima:proxima};
-}
-
-var MESES_NOM = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-var mesAct, anioAct;
-(function(){
-  var hoy = new Date();
-  mesAct = hoy.getMonth();
-  anioAct = hoy.getFullYear();
-})();
-
-function cambiarMes(delta){
-  mesAct += delta;
-  if(mesAct < 0){ mesAct = 11; anioAct--; }
-  if(mesAct > 11){ mesAct = 0; anioAct++; }
-  renderCronograma();
-}
-
-function getMartesJueves(anio, mes){
-  var dias = [];
-  var d = new Date(anio, mes, 1);
-  while(d.getMonth()===mes){
-    if(d.getDay()===2 || d.getDay()===4) dias.push(new Date(d));
-    d.setDate(d.getDate()+1);
-  }
-  return dias;
-}
-function isoDeDate(d){
-  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-
-function renderCronograma(){
-  document.getElementById('cronMesLabel').textContent = MESES_NOM[mesAct]+' '+anioAct;
-  var fechas = getMartesJueves(anioAct, mesAct);
-  var mesAbrev = MESES_NOM[mesAct].slice(0,3).toLowerCase();
-
-  var categorias = {};
-  EQUIPOS.forEach(function(e){ (categorias[e.tipo]=categorias[e.tipo]||[]).push(e); });
-  var orden = ['Autoelevador','Zorra','Traspaleta','Plataforma elevadora','Sin identificar'];
-  var nombrePlural = {'Autoelevador':'Autoelevadores','Zorra':'Zorras eléctricas','Traspaleta':'Traspaletas','Plataforma elevadora':'Plataformas elevadoras','Sin identificar':'Sin identificar'};
-
-  var html = '<thead><tr><th class="th-mes" colspan="4">Equipo</th>';
-  html += '<th class="th-mes" colspan="'+fechas.length+'">'+mesAbrev+'</th></tr>';
-  html += '<tr><th>JJ</th><th>Marca</th><th>N° serie</th><th>Sector</th>';
-  fechas.forEach(function(f){
-    var diaNom = f.getDay()===2 ? 'martes' : 'jueves';
-    html += '<th class="th-dia">'+diaNom+'</th>';
-  });
-  html += '</tr><tr><th colspan="4"></th>';
-  fechas.forEach(function(f){
-    html += '<th class="th-fecha">'+String(f.getDate()).padStart(2,'0')+'-'+mesAbrev+'</th>';
-  });
-  html += '</tr><tr><th colspan="4" style="text-align:right;font-size:9px;color:var(--mu);font-weight:400">A revisar ese día →</th>';
-  fechas.forEach(function(f){
-    var iso = isoDeDate(f);
-    var cant = MANTENIMIENTOS.filter(function(m){ return m.fecha===iso && m.estado==='A revisar'; }).length;
-    html += '<th class="th-cant'+(cant>0?' th-cant-on':'')+'">'+(cant>0?cant:'—')+
-      (cant>0?' <button class="btn-print-dia" data-fecha="'+iso+'" onclick="imprimirDia(this.dataset.fecha)" title="Imprimir listado de este día">🖨</button>':'')+
-    '</th>';
-  });
-  html += '</tr></thead><tbody>';
-
-  orden.forEach(function(tipo){
-    var lista = categorias[tipo];
-    if(!lista || !lista.length) return;
-    html += '<tr class="fila-cat"><td colspan="'+(4+fechas.length)+'">'+(nombrePlural[tipo]||tipo)+'</td></tr>';
-    lista.forEach(function(e){
-      html += '<tr>';
-      html += '<td class="col-jj">'+esc(e.jj)+'</td>';
-      html += '<td class="col-info">'+esc(e.marca)+'</td>';
-      html += '<td class="col-info">'+esc(e.serie||'—')+'</td>';
-      html += '<td class="col-info">'+esc(e.sector)+'</td>';
-      fechas.forEach(function(f){
-        var iso = isoDeDate(f);
-        var reg = MANTENIMIENTOS.find(function(m){ return m.jj===e.jj && m.fecha===iso; });
-        if(reg){
-          var claseEst = reg.estado==='Revisado' ? 'est-revisado' : reg.estado==='Se pasó' ? 'est-pasado' : 'est-arevisar';
-          var etiqueta = reg.estado==='Revisado' ? '✓ Revisado' : reg.estado==='Se pasó' ? '⚠️ Se pasó' : '🕐 A revisar';
-          html += '<td class="cron-celda" data-jj="'+e.jj+'" data-fecha="'+iso+'" onclick="celdaClick(this)">'+
-            '<span class="est-badge '+claseEst+'">'+etiqueta+'</span>'+
-            (reg.estado==='Revisado' && reg.numero_informe ? '<span class="cron-informe">'+esc(reg.numero_informe)+'</span>' : '')+
-            (reg.estado==='Se pasó' && reg.fecha_reprogramada ? '<span class="cron-informe">→ '+fmtDate(reg.fecha_reprogramada)+'</span>' : '')+
-          '</td>';
-        } else {
-          html += '<td class="cron-celda" data-jj="'+e.jj+'" data-fecha="'+iso+'" onclick="celdaClick(this)"><span class="est-vacio">+</span></td>';
-        }
+function consultarDisponibilidad(){
+  var box = document.getElementById('dispoBox');
+  var fecha = document.getElementById('rFecha').value;
+  if(!fecha){ box.innerHTML=''; return; }
+  box.innerHTML = '<span>Consultando disponibilidad...</span>';
+  fetch(APPS_SCRIPT_URL)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var fechaFmt = fmtDateForCompare(fecha);
+      var delDia = (data.reservas||[]).filter(function(r){ return r.fecha===fechaFmt; });
+      if(!delDia.length){
+        box.innerHTML = '<div class="dispo-ok">✅ No hay turnos reservados este día — el equipo está libre.</div>';
+        return;
+      }
+      delDia.sort(function(a,b){ return a.desde<b.desde?-1:1; });
+      var html = '<div style="font-weight:700;margin-bottom:2px">Turnos ya reservados este día:</div>';
+      delDia.forEach(function(r){
+        html += '<div class="dispo-item"><span>'+r.desde+' – '+r.hasta+'</span><span>'+esc(r.usuario||r.solicitante)+'</span></div>';
       });
-      html += '</tr>';
+      box.innerHTML = html;
+    })
+    .catch(function(){ box.innerHTML = '<span style="color:#c62828">No se pudo consultar la disponibilidad (revisá tu conexión).</span>'; });
+}
+function esc(s){ return (s||'').toString().replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+document.getElementById('rFecha').addEventListener('change', consultarDisponibilidad);
+consultarDisponibilidad();
+
+function fmtDate(iso){
+  if(!iso) return '—';
+  var p = iso.split('-');
+  return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+// ── BÚSQUEDA POR FICHA (reutilizable para 'r' reservar y 'c' cierre) ──
+function onFichaInput(pref){
+  var val = document.getElementById(pref+'Ficha').value.trim().toUpperCase();
+  var res = document.getElementById(pref+'FichaResult');
+  var err = document.getElementById(pref+'FichaError');
+  var sugg = document.getElementById(pref+'FichaSugg');
+  if(pref==='r') selPersonaR = null; else selPersonaC = null;
+  res.style.display='none';
+  err.style.display='none';
+  sugg.style.display='none';
+  sugg.innerHTML='';
+
+  if(!val){ checkReady(); return; }
+
+  var matches = PERSONAL.filter(function(p){
+    return p.leg.toUpperCase().indexOf(val) !== -1 ||
+           p.ap.toUpperCase().indexOf(val) !== -1 ||
+           (p.ap+' '+p.nom).toUpperCase().indexOf(val) !== -1;
+  }).slice(0, 8);
+
+  var exact = PERSONAL.find(function(p){ return p.leg.toUpperCase() === val; });
+  if(exact){
+    if(pref==='r') selPersonaR = exact; else selPersonaC = exact;
+    document.getElementById(pref+'Fichanom').textContent = exact.ap + ', ' + exact.nom;
+    document.getElementById(pref+'Fichasec').textContent = exact.sector;
+    res.style.display='block';
+    sugg.style.display='none';
+  } else if(matches.length > 0){
+    sugg.innerHTML = '';
+    matches.forEach(function(p){
+      var div = document.createElement('div');
+      div.className = 'sugg-item';
+      div.innerHTML = '<span style="font-weight:700;color:var(--ac);font-family:monospace">' + p.leg + '</span>' +
+        ' &nbsp;<span style="color:var(--tx)">' + p.ap + ', ' + p.nom + '</span>' +
+        '<br><span style="font-size:11px;color:var(--mu)">' + p.sector + '</span>';
+      (function(leg){
+        div.addEventListener('mousedown', function(){ selectFicha(pref, leg); });
+        div.addEventListener('touchstart', function(e){ e.preventDefault(); selectFicha(pref, leg); });
+      })(p.leg);
+      sugg.appendChild(div);
     });
-  });
-  html += '</tbody>';
-  document.getElementById('cronTabla').innerHTML = html;
+    sugg.style.display='block';
+  } else if(val.length >= 4){
+    err.style.display='block';
+  }
+  checkReady();
 }
 
-function celdaClick(td){
-  var jj = td.getAttribute('data-jj');
-  var fecha = td.getAttribute('data-fecha');
-  var existente = MANTENIMIENTOS.find(function(m){ return m.jj===jj && m.fecha===fecha; });
-  abrirModalNuevo(jj, existente, fecha);
+function selectFicha(pref, leg){
+  var found = PERSONAL.find(function(p){ return p.leg === leg; });
+  if(!found) return;
+  document.getElementById(pref+'Ficha').value = found.leg;
+  document.getElementById(pref+'FichaSugg').style.display='none';
+  if(pref==='r') selPersonaR = found; else selPersonaC = found;
+  document.getElementById(pref+'Fichanom').textContent = found.ap + ', ' + found.nom;
+  document.getElementById(pref+'Fichasec').textContent = found.sector;
+  document.getElementById(pref+'FichaResult').style.display='block';
+  document.getElementById(pref+'FichaError').style.display='none';
+  checkReady();
+}
+function hideSugg(pref){
+  setTimeout(function(){ document.getElementById(pref+'FichaSugg').style.display='none'; }, 180);
 }
 
-function renderTodo(){
-  var totOk=0, totPor=0, totVenc=0;
-  EQUIPOS.forEach(function(e){
-    var st = estadoEquipo(e.jj);
-    if(st.estado==='ok') totOk++; else if(st.estado==='por') totPor++; else totVenc++;
-  });
-
-  document.getElementById('rTotal').textContent = EQUIPOS.length;
-  document.getElementById('rOk').textContent = totOk;
-  document.getElementById('rPor').textContent = totPor;
-  document.getElementById('rVenc').textContent = totVenc;
-}
-
-var estadoSeleccionado = 'A revisar';
-var editandoId = null;
-
-function abrirModalNuevo(jj, registroExistente, fechaSugerida){
-  jjModalActivo = jj;
-  editandoId = registroExistente ? registroExistente.id : null;
-  document.getElementById('modalNuevoTitulo').textContent = (editandoId?'Editar':'Nuevo')+' mantenimiento — '+jj;
-  document.getElementById('mFecha').value = registroExistente ? registroExistente.fecha : (fechaSugerida || hoyISO());
-  document.getElementById('mInforme').value = registroExistente ? (registroExistente.numero_informe||'') : '';
-  document.getElementById('mObs').value = registroExistente ? (registroExistente.observaciones||'') : '';
-  document.getElementById('mFechaReprogramada').value = registroExistente ? (registroExistente.fecha_reprogramada||'') : '';
-  elegirEstado(registroExistente ? registroExistente.estado : 'A revisar');
-  document.getElementById('btnEliminarDesdeModal').style.display = registroExistente ? 'block' : 'none';
-  document.getElementById('modalNuevo').classList.add('show');
-}
-function cerrarModalNuevo(){ document.getElementById('modalNuevo').classList.remove('show'); }
-
-function elegirEstado(estado){
-  estadoSeleccionado = estado;
-  document.getElementById('btnEstArevisar').classList.toggle('on-arevisar', estado==='A revisar');
-  document.getElementById('btnEstRevisado').classList.toggle('on-revisado', estado==='Revisado');
-  document.getElementById('btnEstPasado').classList.toggle('on-pasado', estado==='Se pasó');
-  document.getElementById('camposInforme').style.display = estado==='Revisado' ? 'block' : 'none';
-  document.getElementById('camposReprogramada').style.display = estado==='Se pasó' ? 'block' : 'none';
-}
-
-function confirmarNuevoMantenimiento(){
-  var fecha = document.getElementById('mFecha').value;
-  if(!fecha){ alert('Elegí la fecha del mantenimiento'); return; }
-  var jj = jjModalActivo;
-  var datos = {
-    fecha: fecha,
-    estado: estadoSeleccionado,
-    numero_informe: document.getElementById('mInforme').value.trim(),
-    observaciones: document.getElementById('mObs').value.trim(),
-    fecha_reprogramada: document.getElementById('mFechaReprogramada').value,
-  };
-  if(editandoId){
-    var idx = MANTENIMIENTOS.findIndex(function(m){ return m.id===editandoId; });
-    if(idx>=0) Object.assign(MANTENIMIENTOS[idx], datos);
-    renderTodo();
-    renderCronograma();
-    cerrarModalNuevo();
-    sincronizar('editar', Object.assign({id:editandoId}, datos));
+// ── Tercero (reservar para otra persona) ──
+function toggleTercero(){
+  terceroActivo = !terceroActivo;
+  document.getElementById('checkTercero').classList.toggle('on', terceroActivo);
+  document.getElementById('checkTercero').textContent = terceroActivo ? '✓' : '';
+  document.getElementById('terceroWrap').style.display = terceroActivo ? 'block' : 'none';
+  document.getElementById('fichaWrapR').style.display = terceroActivo ? 'none' : 'block';
+  if(!terceroActivo){
+    document.getElementById('terceroNombre').value='';
   } else {
-    var registro = Object.assign({id:'m_'+Date.now(), jj:jj, created_at:new Date().toISOString()}, datos);
-    MANTENIMIENTOS.push(registro);
-    renderTodo();
-    renderCronograma();
-    cerrarModalNuevo();
-    sincronizar('nuevo', registro);
+    selPersonaR = null;
+    document.getElementById('rFicha').value = '';
+    document.getElementById('rFichaResult').style.display='none';
+    document.getElementById('rFichaError').style.display='none';
   }
-  if(datos.estado==='Revisado'){
-    generarProximoAviso(jj, fecha);
-  }
+  checkReady();
 }
 
-function generarProximoAviso(jj, fechaBase){
-  var fechaEstimada = sumarDias(fechaBase, FRECUENCIA_DIAS);
-  var fechaProxima = proximoMartesOJueves(fechaEstimada);
-  var yaExiste = MANTENIMIENTOS.some(function(m){ return m.jj===jj && m.fecha===fechaProxima; });
-  if(yaExiste) return;
-  var aviso = {
-    id: 'm_'+Date.now()+'_auto',
-    jj: jj,
-    fecha: fechaProxima,
-    estado: 'A revisar',
-    numero_informe: '',
-    observaciones: 'Generado automáticamente a los '+FRECUENCIA_DIAS+' días de la revisión anterior.',
-    fecha_reprogramada: '',
-    created_at: new Date().toISOString()
+// ── Estado del equipo (cierre) ──
+function setEstado(e){
+  estadoSel = e;
+  document.getElementById('btnEstadoOk').classList.toggle('on-ok', e==='ok');
+  document.getElementById('btnEstadoNov').classList.toggle('on-nov', e==='nov');
+  document.getElementById('obsOblig').style.display = e==='nov' ? 'inline' : 'none';
+  checkReady();
+}
+
+// ── Foto (solo vista previa local; no se puede adjuntar por WhatsApp automáticamente) ──
+var fotoDataUrl = null;
+document.getElementById('cFotoInput').addEventListener('change', function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  fotoData = file;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    fotoDataUrl = ev.target.result;
+    document.getElementById('cFotoPreview').innerHTML = '<img src="'+fotoDataUrl+'">';
   };
-  MANTENIMIENTOS.push(aviso);
-  renderTodo();
-  renderCronograma();
-  sincronizar('nuevo', aviso);
+  reader.readAsDataURL(file);
+  checkReady();
+});
+
+// ── Validación ──
+function checkReady(){
+  var okR = document.getElementById('rFecha').value && document.getElementById('rDesde').value &&
+            document.getElementById('rHasta').value &&
+            (terceroActivo ? document.getElementById('terceroNombre').value.trim() : selPersonaR);
+  document.getElementById('btnReservar').disabled = !okR;
+
+  var okC = document.getElementById('cFecha').value && document.getElementById('cHora').value &&
+            selPersonaC && estadoSel && fotoData &&
+            (estadoSel!=='nov' || document.getElementById('cObs').value.trim());
+  document.getElementById('btnCierre').disabled = !okC;
+}
+['rFecha','rDesde','rHasta'].forEach(function(id){ document.getElementById(id).addEventListener('input', checkReady); });
+['cFecha','cHora','cObs'].forEach(function(id){ document.getElementById(id).addEventListener('input', checkReady); });
+document.getElementById('terceroNombre').addEventListener('input', checkReady);
+
+// ── ENVIAR RESERVA ──
+function enviarReserva(){
+  var fecha = document.getElementById('rFecha').value;
+  var desde = document.getElementById('rDesde').value;
+  var hasta = document.getElementById('rHasta').value;
+  var motivo = document.getElementById('rMotivo').value.trim();
+  var usuario = terceroActivo ? document.getElementById('terceroNombre').value.trim() : (selPersonaR.ap+', '+selPersonaR.nom);
+  var fechaFmt = fmtDate(fecha);
+
+  document.getElementById('btnReservar').disabled = true;
+  document.getElementById('btnReservar').textContent = 'Guardando...';
+
+  var payload = {
+    action: 'reserva',
+    id: 'res_'+Date.now(),
+    fecha: fechaFmt, desde: desde, hasta: hasta,
+    fichaSolicitante: terceroActivo ? '' : selPersonaR.leg,
+    solicitante: terceroActivo ? usuario : (selPersonaR.ap+', '+selPersonaR.nom),
+    sector: terceroActivo ? 'Proveedor externo' : selPersonaR.sector,
+    usuario: usuario,
+    esTercero: terceroActivo,
+    motivo: motivo
+  };
+
+  fetch(APPS_SCRIPT_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)})
+    .then(function(){
+      mostrarExitoReserva(fechaFmt, desde, hasta, usuario, motivo, true, null);
+    })
+    .catch(function(err){
+      mostrarExitoReserva(fechaFmt, desde, hasta, usuario, motivo, false, err.message);
+    });
 }
 
-function imprimirDia(fechaIso){
-  var pendientes = MANTENIMIENTOS.filter(function(m){ return m.fecha===fechaIso && m.estado==='A revisar'; });
+function mostrarExitoReserva(fechaFmt, desde, hasta, usuario, motivo, okGuardado, errorMsg){
+  var aviso = okGuardado
+    ? '<div style="background:#eafaf0;border:1.5px solid var(--gn);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--gn);margin-bottom:12px">✅ Enviado a la planilla.</div>'
+    : '<div style="background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#c62828;margin-bottom:12px">⚠️ NO se pudo enviar (sin conexión). Error: '+(errorMsg||'desconocido')+'</div>';
+  document.getElementById('rSuccMsg').textContent = 'Turno del '+fechaFmt+' de '+desde+' a '+hasta+'.';
+  document.getElementById('rSuccDet').innerHTML = aviso+
+    '<strong>👤 '+usuario+'</strong>'+
+    '<div style="font-size:12px;color:var(--mu);margin-top:4px">📅 '+fechaFmt+' · 🕐 '+desde+' a '+hasta+'</div>'+
+    (motivo?'<div style="font-size:13px;margin-top:8px">✏️ '+motivo+'</div>':'');
 
-  var filas = pendientes.map(function(m){
-    var eq = EQUIPOS.find(function(e){ return e.jj===m.jj; }) || {};
-    return '<tr>'+
-      '<td>'+esc(m.jj)+'</td>'+
-      '<td>'+esc(eq.marca||'')+'</td>'+
-      '<td>'+esc(eq.serie||'—')+'</td>'+
-      '<td>'+esc(eq.sector||'')+'</td>'+
-    '</tr>';
-  }).join('');
+  document.getElementById('pantallaReservarForm').classList.remove('on');
+  document.getElementById('pantallaReservarExito').classList.add('on');
 
-  var html = '<h2>Akapol · Mantenimiento — Equipos a revisar el '+fmtDate(fechaIso)+'</h2>'+
-    '<div class="print-sub">'+pendientes.length+' equipo(s) programado(s) para ese día</div>'+
-    '<table class="print-tabla"><thead><tr>'+
-      '<th>JJ</th><th>Marca</th><th>N° de serie</th><th>Sector</th>'+
-    '</tr></thead><tbody>'+
-    (filas || '<tr><td colspan="4" style="text-align:center">No hay equipos programados para este día.</td></tr>')+
-    '</tbody></table>';
-
-  document.getElementById('printARevisar').innerHTML = html;
-  window.print();
+  var lineas = [];
+  lineas.push('*RESERVA EQUIPO DE ELEVACIÓN - AKAPOL*');
+  lineas.push('-----------------------------');
+  lineas.push('*Fecha de uso:* '+fechaFmt);
+  lineas.push('*Desde:* '+desde+'  *Hasta:* '+hasta);
+  lineas.push('*Usuario:* '+usuario);
+  if(motivo){ lineas.push('-----------------------------'); lineas.push('Motivo: '+motivo); }
+  lineas.push('-----------------------------');
+  lineas.push(okGuardado ? '✅ Ya guardado en la planilla — este mensaje es solo aviso.' : '⚠️ OJO: no se guardó en la planilla, avisar a mantenimiento.');
+  var texto = lineas.join('\n');
+  var waUrl = 'https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(texto);
+  setTimeout(function(){ window.location.href = waUrl; }, 400);
 }
 
-function abrirModalHist(jj){
-  var eq = EQUIPOS.find(function(e){ return e.jj===jj; });
-  document.getElementById('modalHistTitulo').textContent = 'Historial — '+jj+(eq?' ('+eq.marca+')':'');
-  var deEquipo = MANTENIMIENTOS.filter(function(m){ return m.jj===jj; }).slice().sort(function(a,b){ return a.fecha<b.fecha?1:-1; });
-  var body = document.getElementById('modalHistBody');
-  if(!deEquipo.length){
-    body.innerHTML = '<div style="color:var(--mu);text-align:center;padding:20px">Todavía no hay mantenimientos registrados para este equipo.</div>';
-  } else {
-    body.innerHTML = deEquipo.map(function(m){
-      var claseEst = m.estado==='Revisado' ? 'est-revisado' : m.estado==='Se pasó' ? 'est-pasado' : 'est-arevisar';
-      var etiqueta = m.estado==='Revisado' ? '✓ Revisado' : m.estado==='Se pasó' ? '⚠️ Se pasó' : '🕐 A revisar';
-      return '<div class="hist-item">'+
-        '<div class="hist-fecha">'+fmtDate(m.fecha)+' <span class="est-badge '+claseEst+'">'+etiqueta+'</span></div>'+
-        (m.numero_informe?'<div>Informe: '+esc(m.numero_informe)+'</div>':'')+
-        (m.fecha_reprogramada?'<div>Nueva fecha estimada: '+fmtDate(m.fecha_reprogramada)+'</div>':'')+
-        (m.observaciones?'<div class="hist-acciones">'+esc(m.observaciones)+'</div>':'')+
-        '<button class="link-mini" data-id="'+m.id+'" onclick="eliminarMantenimiento(this.dataset.id)">🗑 Eliminar</button>'+
-      '</div>';
-    }).join('');
-  }
-  document.getElementById('modalHist').classList.add('show');
-}
-function cerrarModalHist(){ document.getElementById('modalHist').classList.remove('show'); }
-
-function eliminarMantenimiento(id){
-  if(!confirm('¿Eliminar este registro de mantenimiento?')) return;
-  var jj = (MANTENIMIENTOS.find(function(m){return m.id===id;})||{}).jj;
-  MANTENIMIENTOS = MANTENIMIENTOS.filter(function(m){ return m.id!==id; });
-  renderTodo();
-  if(jj) abrirModalHist(jj);
-  sincronizar('eliminar', {id:id});
+function resetReservar(){
+  document.getElementById('rDesde').value='';
+  document.getElementById('rHasta').value='';
+  document.getElementById('rMotivo').value='';
+  document.getElementById('rFicha').value='';
+  document.getElementById('rFichaResult').style.display='none';
+  selPersonaR = null;
+  terceroActivo = false;
+  document.getElementById('checkTercero').classList.remove('on');
+  document.getElementById('checkTercero').textContent='';
+  document.getElementById('terceroWrap').style.display='none';
+  document.getElementById('fichaWrapR').style.display='block';
+  document.getElementById('terceroNombre').value='';
+  document.getElementById('rFecha').value = hoyISO();
+  document.getElementById('btnReservar').textContent = 'Reservar turno →';
+  checkReady();
+  document.getElementById('pantallaReservarExito').classList.remove('on');
+  document.getElementById('pantallaReservarForm').classList.add('on');
+  consultarDisponibilidad();
 }
 
-function eliminarDesdeModalNuevo(){
-  if(!editandoId) return;
-  if(!confirm('¿Eliminar este registro de mantenimiento?')) return;
-  var idAEliminar = editandoId;
-  MANTENIMIENTOS = MANTENIMIENTOS.filter(function(m){ return m.id!==idAEliminar; });
-  renderTodo();
-  renderCronograma();
-  cerrarModalNuevo();
-  sincronizar('eliminar', {id:idAEliminar});
+// ── ENVIAR CIERRE ──
+function enviarCierre(){
+  var fecha = document.getElementById('cFecha').value;
+  var hora = document.getElementById('cHora').value;
+  var obs = document.getElementById('cObs').value.trim();
+  var fechaFmt = fmtDate(fecha);
+
+  document.getElementById('btnCierre').disabled = true;
+  document.getElementById('btnCierre').textContent = 'Subiendo foto y guardando...';
+
+  var payload = {
+    action: 'cierre',
+    id: 'cie_'+Date.now(),
+    fecha: fechaFmt, hora: hora,
+    ficha: selPersonaC.leg,
+    usuario: selPersonaC.ap+', '+selPersonaC.nom,
+    sector: selPersonaC.sector,
+    estadoOk: estadoSel==='ok',
+    obs: obs,
+    fotoBase64: fotoDataUrl
+  };
+
+  fetch(APPS_SCRIPT_URL, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload)})
+    .then(function(){
+      mostrarExitoCierre(fechaFmt, hora, obs, true, null);
+    })
+    .catch(function(err){
+      mostrarExitoCierre(fechaFmt, hora, obs, false, err.message);
+    });
 }
 
-function actualizarTodo(){
-  cargarDesdeSheet(function(){
-    renderTodo();
-    renderCronograma();
-  });
+function mostrarExitoCierre(fechaFmt, hora, obs, okGuardado, errorMsg){
+  var aviso = okGuardado
+    ? '<div style="background:#eafaf0;border:1.5px solid var(--gn);border-radius:10px;padding:10px 14px;font-size:12.5px;color:var(--gn);margin-bottom:12px">✅ Enviado a la planilla (con la foto).</div>'
+    : '<div style="background:#fff5f5;border:1.5px solid #e05050;border-radius:10px;padding:10px 14px;font-size:12.5px;color:#c62828;margin-bottom:12px">⚠️ NO se pudo enviar (sin conexión). Error: '+(errorMsg||'desconocido')+'</div>';
+  document.getElementById('cSuccDet').innerHTML = aviso+
+    '<strong>👤 '+selPersonaC.ap+', '+selPersonaC.nom+'</strong>'+
+    '<div style="font-size:12px;color:var(--mu);margin-top:4px">📅 '+fechaFmt+' · 🕐 '+hora+'</div>'+
+    '<div style="font-size:13px;margin-top:8px">'+(estadoSel==='ok'?'✅ Sin novedades':'⚠️ Con novedad')+'</div>'+
+    (obs?'<div style="font-size:13px;margin-top:4px">✏️ '+obs+'</div>':'');
+
+  document.getElementById('pantallaCierreForm').classList.remove('on');
+  document.getElementById('pantallaCierreExito').classList.add('on');
+
+  var lineas = [];
+  lineas.push('*CIERRE DE USO - EQUIPO DE ELEVACIÓN - AKAPOL*');
+  lineas.push('-----------------------------');
+  lineas.push('*Fecha:* '+fechaFmt);
+  lineas.push('*Hora de finalización:* '+hora);
+  lineas.push('*Usuario:* '+selPersonaC.ap+', '+selPersonaC.nom);
+  lineas.push('*Estado del equipo:* '+(estadoSel==='ok'?'✅ Sin novedades':'⚠️ Con novedad'));
+  if(obs){ lineas.push('-----------------------------'); lineas.push('Observaciones: '+obs); }
+  lineas.push('-----------------------------');
+  lineas.push(okGuardado ? '✅ Cierre y foto ya guardados en la planilla — este mensaje es solo aviso.' : '⚠️ OJO: no se guardó en la planilla, avisar a mantenimiento.');
+  var texto = lineas.join('\n');
+  var waUrl = 'https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(texto);
+  setTimeout(function(){ window.location.href = waUrl; }, 400);
 }
 
-// ── Inicio ──
-renderTodo();
-renderCronograma();
-actualizarTodo();
-setInterval(actualizarTodo, 20000);
+function resetCierre(){
+  document.getElementById('cFicha').value='';
+  document.getElementById('cFichaResult').style.display='none';
+  selPersonaC = null;
+  estadoSel='';
+  document.getElementById('btnEstadoOk').classList.remove('on-ok');
+  document.getElementById('btnEstadoNov').classList.remove('on-nov');
+  document.getElementById('obsOblig').style.display='none';
+  document.getElementById('cObs').value='';
+  fotoData = null;
+  fotoDataUrl = null;
+  document.getElementById('cFotoPreview').innerHTML = '<span class="ph">Sin foto</span>';
+  document.getElementById('cFotoInput').value='';
+  document.getElementById('cFecha').value = hoyISO();
+  document.getElementById('cHora').value = horaAhoraHHMM();
+  document.getElementById('btnCierre').textContent = 'Registrar cierre →';
+  checkReady();
+  document.getElementById('pantallaCierreExito').classList.remove('on');
+  document.getElementById('pantallaCierreForm').classList.add('on');
+}
+
+checkReady();
 </script>
 </body>
 </html>
